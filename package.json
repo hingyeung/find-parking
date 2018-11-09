@@ -1,0 +1,14 @@
+{
+  "name": "find-parking",
+  "version": "1.0.0",
+  "description": "https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Samuel Li <samli@samuelli.net>",
+  "license": "ISC",
+  "dependencies": {
+    "dynamodb-geo": "^0.4.0"
+  }
+}

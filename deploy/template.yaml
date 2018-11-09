@@ -1,0 +1,24 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  find-parking
+
+  Find parking space using parking sensor data.
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  UploadParkingSensorDataToDB:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: load_sensor_data_into_db.handler
+      Runtime: nodejs8.10
+
+Outputs:
+  UploadParkingSensorDataToDB:
+    Description: "UploadParkingSensorDataToDB Lambda Function ARN"
+    Value: !GetAtt UploadParkingSensorDataToDB.Arn
