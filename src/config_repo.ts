@@ -1,7 +1,9 @@
 class ConfigRepo {
+  config: AppConfig;
+
   constructor() {
     if (process.env.AWS_SAM_LOCAL) {
-        const configFile = "configs/local/config.json";
+        const configFile = 'configs/local/config.json';
         console.log(`Loading ${configFile}...`);
         this.config = require(configFile);
     }
