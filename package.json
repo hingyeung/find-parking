@@ -4,6 +4,9 @@
   "description": "https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000",
   "main": "index.js",
   "scripts": {
+    "start_localstack": "./scripts/start_localstack.sh",
+    "seed_data": "./scripts/seed_data.sh",
+    "load_data_from_s3": "./node_modules/webpack/bin/webpack.js && ./scripts/load_data_from_s3_to_db.sh data/events/sensor_data_file_updated.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Samuel Li <samli@samuelli.net>",
@@ -15,7 +18,10 @@
     "@types/aws-lambda": "^8.10.15",
     "@types/aws-sdk": "^2.7.0",
     "@types/node": "^10.12.5",
+    "awesome-typescript-loader": "^5.2.1",
     "tslint": "^5.11.0",
-    "typescript": "^3.1.6"
+    "typescript": "^3.1.6",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2"
   }
 }

@@ -1,25 +1,31 @@
+const APP_CONFIG = require('./configs/app_configs.json');
 class ConfigRepo {
   config: AppConfig;
 
   constructor() {
+  }
+
+  _getConfigForThisEnv() {
     if (process.env.AWS_SAM_LOCAL) {
-        const configFile = 'configs/local/config.json';
-        console.log(`Loading ${configFile}...`);
-        this.config = require(configFile);
+      return APP_CONFIG['local'];
+    } else {
+      return APP_CONFIG[process.env.NODE_ENV];
     }
   }
 
   getDynamoDBConfigs() {
+    const configForThisEnv = this._getConfigForThisEnv();
     return {
-      endpoint: this.config.dynamodbEndpoint,
-      region: this.config.region
+      endpoint: configForThisEnv.dynamodbEndpoint,
+      region: configForThisEnv.region
     };
   }
 
   getS3Configs() {
+    const configForThisEnv = this._getConfigForThisEnv();
     return {
-      endpoint: this.config.s3Endpoint,
-      region: this.config.region
+      endpoint: configForThisEnv.s3Endpoint,
+      region: configForThisEnv.region
     };
   }
 }
