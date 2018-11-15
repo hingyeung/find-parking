@@ -1,8 +1,8 @@
 import S3 = require('aws-sdk/clients/s3');
 import { S3Event, S3Handler } from 'aws-lambda';
 
-const ConfigRepo = require('./config_repo');
-const ParkingSensorDataRepo = require('./parking_sensor_data_repo');
+const ConfigRepo = require('./services/config_repo');
+const ParkingSensorDataRepo = require('./services/parking_sensor_data_repo');
 
 const getS3Options = () => {
   const options = {

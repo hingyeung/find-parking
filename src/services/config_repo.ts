@@ -1,4 +1,4 @@
-const APP_CONFIG = require('./configs/app_configs.json');
+const APP_CONFIG = require('../configs/app_configs.json');
 class ConfigRepo {
   config: AppConfig;
 

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000",
   "main": "index.js",
+  "engines": {
+    "node": ">=8.11.4 <9.0.0"
+  },
   "scripts": {
     "start_localstack": "./scripts/start_localstack.sh",
     "seed_data": "./scripts/seed_data.sh",
@@ -12,13 +15,16 @@
   "author": "Samuel Li <samli@samuelli.net>",
   "license": "ISC",
   "dependencies": {
-    "dynamodb-geo": "^0.4.0"
+    "dynamodb-geo": "^0.4.0",
+    "minimist": "^1.2.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.15",
     "@types/aws-sdk": "^2.7.0",
     "@types/node": "^10.12.5",
     "awesome-typescript-loader": "^5.2.1",
+    "fork-ts-checker-webpack-plugin": "^0.4.15",
+    "ts-loader": "^5.3.0",
     "tslint": "^5.11.0",
     "typescript": "^3.1.6",
     "webpack": "^4.25.1",
