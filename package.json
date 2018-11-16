@@ -8,8 +8,8 @@
   },
   "scripts": {
     "start_localstack": "./scripts/start_localstack.sh",
-    "seed_data": "./scripts/seed_data.sh",
-    "load_data_from_s3": "./node_modules/webpack/bin/webpack.js && ./scripts/load_data_from_s3_to_db.sh data/events/sensor_data_file_updated.json",
+    "seed_data": "./node_modules/webpack/bin/webpack.js --TARGET=create_parking_sensor_table && node ./dist/create_parking_sensor_table_bundle.js && ./scripts/seed_data.sh",
+    "load_data_from_s3": "./node_modules/webpack/bin/webpack.js --TARGET=load_sensor_data_into_db && ./scripts/load_data_from_s3_to_db.sh data/events/sensor_data_file_updated.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Samuel Li <samli@samuelli.net>",

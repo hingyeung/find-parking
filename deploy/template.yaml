@@ -15,7 +15,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../dist
-      Handler: load_sensor_data_into_db.handler
+      Handler: load_sensor_data_into_db_bundle.handler
       Runtime: nodejs8.10
 
 Outputs:

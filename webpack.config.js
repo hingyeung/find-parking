@@ -13,7 +13,8 @@ const webpackConfig = {
   output: {
     pathinfo: false,
     path: path.join(__dirname, "dist"),
-    filename: `${target}_bundle.js`
+    filename: `${target}_bundle.js`,
+    libraryTarget: 'commonjs2'
   },
   mode: 'development',
   optimization: {
@@ -40,7 +41,10 @@ const webpackConfig = {
   },
   plugins: [
     new ForkTsCheckerWebpackPlugin()
-  ]
+  ],
+  // https://stackoverflow.com/questions/41248575/webpack-react-process-env-always-empty-windows-10
+  // node: {process: false},
+  target: "node"
 };
 
 module.exports = webpackConfig;

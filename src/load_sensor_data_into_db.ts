@@ -9,9 +9,9 @@ const getS3Options = () => {
     apiVersion: '2006-03-01',
     // https://github.com/localstack/localstack/issues/43#issuecomment-375828074
     s3ForcePathStyle: true
-  }, configRepo = new ConfigRepo();
+  };
 
-  return Object.assign({}, options, configRepo.getS3Configs());
+  return Object.assign({}, options, ConfigRepo.getS3Configs());
 };
 
 const getSensorDataFromS3 = (srcBucket: string, srcKey: string): Promise<ParkingSensorData[]> => {
@@ -35,7 +35,7 @@ const loadSensorDataIntoDB = async (sensorDataList: ParkingSensorData[]) => {
   //     console.log('Failed to load sensor data into DB', err);
   //     return Promise.reject(err);
   //   });
-  await psdr.upsertBatchData(sensorDataList).catch((err: Error) => {
+  await psdr.upsert(sensorDataList[0]).catch((err: Error) => {
     console.log('Failed to upsert sensor data', err);
     return Promise.reject(err);
   });

@@ -5,7 +5,7 @@ class ConfigRepo {
   constructor() {
   }
 
-  _getConfigForThisEnv() {
+  static _getConfigForThisEnv() {
     if (process.env.AWS_SAM_LOCAL) {
       return APP_CONFIG['local'];
     } else {
@@ -13,16 +13,17 @@ class ConfigRepo {
     }
   }
 
-  getDynamoDBConfigs() {
-    const configForThisEnv = this._getConfigForThisEnv();
+  static getDynamoDBConfigs() {
+    const configForThisEnv = ConfigRepo._getConfigForThisEnv();
     return {
       endpoint: configForThisEnv.dynamodbEndpoint,
       region: configForThisEnv.region
     };
   }
 
-  getS3Configs() {
-    const configForThisEnv = this._getConfigForThisEnv();
+  static getS3Configs() {
+    const configForThisEnv = ConfigRepo._getConfigForThisEnv();
+    console.log(configForThisEnv);
     return {
       endpoint: configForThisEnv.s3Endpoint,
       region: configForThisEnv.region

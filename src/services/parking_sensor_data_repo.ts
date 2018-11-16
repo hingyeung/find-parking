@@ -13,8 +13,7 @@ class ParkingSensorDataRepo {
   ddbGeoDataManager: GeoDataManager;
 
   constructor() {
-    const configRepo = new ConfigRepo();
-    this.ddb = new AWS.DynamoDB(configRepo.getDynamoDBConfigs());
+    this.ddb = new AWS.DynamoDB(ConfigRepo.getDynamoDBConfigs());
     this.ddbGeoConfig = new ddbGeo.GeoDataManagerConfiguration(this.ddb, PARKING_SENSOR_DATA_TABLE_NAME);
     this.ddbGeoConfig.hashKeyLength = 7;
     this.ddbGeoDataManager = new ddbGeo.GeoDataManager(this.ddbGeoConfig);
