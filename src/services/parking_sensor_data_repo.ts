@@ -1,6 +1,5 @@
 import { AWSError, DynamoDB } from 'aws-sdk';
 import { GeoDataManager, GeoDataManagerConfiguration } from 'dynamodb-geo';
-import { PutPointInput, GetPointInput } from 'dynamodb-geo/dist/types';
 
 const ddbGeo = require('dynamodb-geo');
 const ConfigRepo = require('./config_repo');
@@ -76,10 +75,21 @@ class ParkingSensorDataRepo {
     return this.ddbGeoDataManager.putPoint(putPointInput).promise();
   }
 
+  async upsertAll(sensorDataList: ParkingSensorData[]): Promise<any> {
+    try {
+      for (let idx = 0; idx < sensorDataList.length; idx++) {
+        console.log('upserting a data point');
+        await this.upsert(sensorDataList[idx]);
+      }
+      return Promise.resolve();
+    } catch (err) {
+      return Promise.reject(err);
+    }
+  }
+
   upsert(sensorData: ParkingSensorData): Promise<any> {
     // 1. Get the original item
     return this._get(sensorData).then((original) => {
-      console.log(original);
       if (Object.keys(original).length > 0) {
         console.log('original found, perform update');
         // 2. Update if item already exists

@@ -3,7 +3,7 @@ https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000
 
 # Dev Setup
 1. Use virtualenv  
-  `mkvirtualenv find-parking`, or `workon find-parking`
+  `mkvirtualenv find-parking`, or `workon find-parking` if the virtualenv `find-parking` already exists.
 1. Install python dependencies  
   `pip install -r requirements.txt`
 1. Copy parking sensor data file to localstack s3  
@@ -11,10 +11,9 @@ https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000
   `aws --endpoint-url=http://localhost:4572 s3 cp data/melb-3000_parking-sensor.json s3://melb-city-parking-sensor-data/`
 1. Start localstack  
   `./scripts/start_localstack.sh`
-1. Create DynamoDB table  
-  `NODE_ENV=dev node scripts/create_parking_sensor_table.js`
-1. Copy code and dependencies to dist/  
-  TODO: Don't need this rsync step anymore for source code, but still need something similar for config files.
-  `rsync -avz ./src/*  dist/ && rsync -avz ./node_modules dist/`
-1. Run lambda function  
-  `./scripts/load_data_from_s3_to_db.sh data/events/sensor_data_file_updated.json`
+1. Create DynamoDB table and populate S3 with data  
+  `npm run seed_data`
+1. Watch and transpile the `load_data_from_s3` Lambda function  
+  `npm run watch_load_data_from_s3`
+1. Run the `load_data_from_s3` Lambda function  
+  `npm run run_load_data_from_s3`

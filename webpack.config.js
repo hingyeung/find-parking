@@ -40,7 +40,7 @@ const webpackConfig = {
     extensions: ['.ts', '.tsx', '.js']
   },
   plugins: [
-    new ForkTsCheckerWebpackPlugin()
+    new ForkTsCheckerWebpackPlugin({workers:2})
   ],
   // https://stackoverflow.com/questions/41248575/webpack-react-process-env-always-empty-windows-10
   // node: {process: false},
