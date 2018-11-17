@@ -35,7 +35,13 @@ const loadSensorDataIntoDB = async (sensorDataList: ParkingSensorData[]) => {
   //     console.log('Failed to load sensor data into DB', err);
   //     return Promise.reject(err);
   //   });
-  await psdr.upsert(sensorDataList[0]).catch((err: Error) => {
+  await psdr.upsert(sensorDataList[0]).then(
+    (data: any) => {
+      console.log('data upserted');
+      console.dir(data);
+    }
+  ).catch(
+    (err: Error) => {
     console.log('Failed to upsert sensor data', err);
     return Promise.reject(err);
   });
