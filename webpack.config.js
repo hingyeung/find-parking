@@ -16,7 +16,7 @@ const webpackConfig = {
     filename: `${target}_bundle.js`,
     libraryTarget: 'commonjs2'
   },
-  mode: 'development',
+  mode: 'production',
   optimization: {
     removeAvailableModules: false,
     removeEmptyChunks: false,

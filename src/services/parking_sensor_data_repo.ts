@@ -3,7 +3,7 @@ import { GeoDataManager, GeoDataManagerConfiguration } from 'dynamodb-geo';
 
 const ddbGeo = require('dynamodb-geo');
 const ConfigRepo = require('./config_repo');
-const PARKING_SENSOR_DATA_TABLE_NAME = 'ParkingSensorTable';
+const PARKING_SENSOR_DATA_TABLE = process.env.PARKING_SENSOR_DATA_TABLE;
 
 class ParkingSensorDataRepo {
   private ddb: DynamoDB;
@@ -12,7 +12,7 @@ class ParkingSensorDataRepo {
 
   constructor() {
     this.ddb = new DynamoDB(ConfigRepo.getDynamoDBConfigs());
-    this.ddbGeoConfig = new ddbGeo.GeoDataManagerConfiguration(this.ddb, PARKING_SENSOR_DATA_TABLE_NAME);
+    this.ddbGeoConfig = new ddbGeo.GeoDataManagerConfiguration(this.ddb, PARKING_SENSOR_DATA_TABLE);
     this.ddbGeoConfig.hashKeyLength = 7;
     this.ddbGeoDataManager = new ddbGeo.GeoDataManager(this.ddbGeoConfig);
 
@@ -47,7 +47,7 @@ class ParkingSensorDataRepo {
       RangeKeyValue: {S: sensorData.bay_id},
       GeoPoint: {latitude: sensorData.lat, longitude: sensorData.lon},
       GetItemInput: {
-        TableName: PARKING_SENSOR_DATA_TABLE_NAME,
+        TableName: PARKING_SENSOR_DATA_TABLE,
         // I wonder if dyanmodb-geo would fill the Key for me.
         // It fills the Key for "update" and "add".
         // Typescript type definition demands the Key attribute to be presences
@@ -78,8 +78,10 @@ class ParkingSensorDataRepo {
   async upsertAll(sensorDataList: ParkingSensorData[]): Promise<any> {
     try {
       for (let idx = 0; idx < sensorDataList.length; idx++) {
-        console.log('upserting a data point');
         await this.upsert(sensorDataList[idx]);
+        if (idx % 100 === 0) {
+          console.log(`inserted ${idx} records`);
+        }
       }
       return Promise.resolve();
     } catch (err) {
@@ -91,12 +93,10 @@ class ParkingSensorDataRepo {
     // 1. Get the original item
     return this._get(sensorData).then((original) => {
       if (Object.keys(original).length > 0) {
-        console.log('original found, perform update');
         // 2. Update if item already exists
         // return _update(data, original);
       } else {
         // 3. Otherwise, put the item
-        console.log('original not found, perform put');
         return this._put(sensorData).catch( (err: AWSError) => {
           if (err.code === 'ConditionalCheckFailedException') {
             // 3a. Only 1 of the concurrent puts will succeed,

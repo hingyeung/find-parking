@@ -1,5 +1,6 @@
 {
-  "UploadParkingSensorDataToDB": {
-    "NODE_ENV": "local"
+  "UploadParkingSensorDataToDBFunction": {
+    "NODE_ENV": "sam_local",
+    "PARKING_SENSOR_DATA_TABLE": "ParkingSensorDataTable"
   }
 }

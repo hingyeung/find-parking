@@ -7,7 +7,7 @@ class ConfigRepo {
 
   static _getConfigForThisEnv() {
     if (process.env.AWS_SAM_LOCAL) {
-      return APP_CONFIG['local'];
+      return APP_CONFIG['sam_local'];
     } else {
       return APP_CONFIG[process.env.NODE_ENV];
     }
@@ -23,7 +23,6 @@ class ConfigRepo {
 
   static getS3Configs() {
     const configForThisEnv = ConfigRepo._getConfigForThisEnv();
-    console.log(configForThisEnv);
     return {
       endpoint: configForThisEnv.s3Endpoint,
       region: configForThisEnv.region

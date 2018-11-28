@@ -17,3 +17,7 @@ https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000
   `npm run watch_load_data_from_s3`
 1. Run the `load_data_from_s3` Lambda function  
   `npm run run_load_data_from_s3`
+1. Package the Lambda function  
+  `sam package --template-file deploy/template.yaml --s3-bucket <bucket_name> --s3-prefix find-parking/artefacts --output-template-file tmp/find_parking_cfn.yaml`
+1. Deploy the stack  
+  `aws  cloudformation deploy --template-file /Users/samli/dev/find-parking/tmp/find_parking_cfn.yaml --stack-name <stack_name> --capabilities CAPABILITY_IAM --parameter-overrides dataBucket=<bucket_name>`

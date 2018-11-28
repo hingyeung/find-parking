@@ -9,7 +9,7 @@ SAM_TEMPLATE=deploy/template.yaml
 
 # use --skip-pull-image when offline
 sam local invoke \
-    --template ${CF_TEMPLATE} UploadParkingSensorDataToDB \
+    --template ${CF_TEMPLATE} UploadParkingSensorDataToDBFunction \
     --env-vars ${ENV_VARS} \
     --docker-network ${DOCKER_NETWORK} \
     --skip-pull-image \

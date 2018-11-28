@@ -1,5 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
+Parameters:
+  dataBucket:
+    Type: String
 Description: >
   find-parking
 
@@ -11,14 +14,60 @@ Globals:
     Timeout: 120
 
 Resources:
-  UploadParkingSensorDataToDB:
+  UploadParkingSensorDataToDBFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../dist
       Handler: load_sensor_data_into_db_bundle.handler
       Runtime: nodejs8.10
+      MemorySize: 256
+      Environment:
+        Variables:
+          NODE_ENV: 'production'
+          PARKING_SENSOR_DATA_TABLE: !Ref ParkingSensorDataTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ParkingSensorDataTable
+        - S3ReadPolicy:
+            BucketName: !Ref dataBucket
+        - AWSLambdaBasicExecutionRole
+
+  # AWS::Serverless::SimpleTable does not support range key
+  ParkingSensorDataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: hashKey
+          AttributeType: N
+        - AttributeName: rangeKey
+          AttributeType: S
+        - AttributeName: geohash
+          AttributeType: N
+      KeySchema:
+        - AttributeName: hashKey
+          KeyType: HASH
+        - AttributeName: rangeKey
+          KeyType: RANGE
+      LocalSecondaryIndexes:
+        - IndexName: geohash-index
+          KeySchema:
+            - AttributeName: hashKey
+              KeyType: HASH
+            - AttributeName: geohash
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      ProvisionedThroughput:
+        WriteCapacityUnits: 10
+        ReadCapacityUnits: 10
+
+  FindParkingLambdaFunctionLog:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref UploadParkingSensorDataToDBFunction ] ]
+      RetentionInDays: 5
 
 Outputs:
-  UploadParkingSensorDataToDB:
-    Description: "UploadParkingSensorDataToDB Lambda Function ARN"
-    Value: !GetAtt UploadParkingSensorDataToDB.Arn
+  UploadParkingSensorDataToDBFunction:
+    Description: "UploadParkingSensorDataToDBFunction Lambda Function ARN"
+    Value: !GetAtt UploadParkingSensorDataToDBFunction.Arn
