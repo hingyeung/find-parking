@@ -3,17 +3,35 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
   dataBucket:
     Type: String
+  downloadDestPrefix:
+    Type: String
 Description: >
   find-parking
 
   Find parking space using parking sensor data.
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-Globals:
-  Function:
-    Timeout: 120
 
 Resources:
+  DownloadParkingSensorDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: download_parking_sensor_data_bundle.handler
+      Runtime: nodejs8.10
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          NODE_ENV: 'production'
+          TARGET_BUCKET: !Ref dataBucket
+          TARGET_PREFIX: !Ref downloadDestPrefix
+      Policies:
+        # TODO This function needs S3 write permission!
+      - S3CrudPolicy:
+          BucketName: !Ref dataBucket
+      - AWSLambdaBasicExecutionRole
+
   UploadParkingSensorDataToDBFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -21,6 +39,7 @@ Resources:
       Handler: load_sensor_data_into_db_bundle.handler
       Runtime: nodejs8.10
       MemorySize: 256
+      Timeout: 120
       Environment:
         Variables:
           NODE_ENV: 'production'

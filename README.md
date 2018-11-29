@@ -20,4 +20,4 @@ https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000
 1. Package the Lambda function  
   `sam package --template-file deploy/template.yaml --s3-bucket <bucket_name> --s3-prefix find-parking/artefacts --output-template-file tmp/find_parking_cfn.yaml`
 1. Deploy the stack  
-  `aws  cloudformation deploy --template-file /Users/samli/dev/find-parking/tmp/find_parking_cfn.yaml --stack-name <stack_name> --capabilities CAPABILITY_IAM --parameter-overrides dataBucket=<bucket_name>`
+  `aws  cloudformation deploy --template-file /Users/samli/dev/find-parking/tmp/find_parking_cfn.yaml --stack-name <stack_name> --capabilities CAPABILITY_IAM --parameter-overrides dataBucket=<bucket_name> downloadDestPrefix=find-parking/data`  

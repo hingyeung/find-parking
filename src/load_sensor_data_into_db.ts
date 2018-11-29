@@ -1,4 +1,4 @@
-import { S3 } from 'aws-sdk';
+import S3 = require('aws-sdk/clients/s3');
 import { S3Event, S3Handler } from 'aws-lambda';
 
 const ConfigRepo = require('./services/config_repo');
@@ -30,11 +30,6 @@ const getSensorDataFromS3 = (srcBucket: string, srcKey: string): Promise<Parking
 
 const loadSensorDataIntoDB = async (sensorDataList: ParkingSensorData[]) => {
   const psdr = new ParkingSensorDataRepo();
-  // const res = await psdr.createTable()
-  //   .catch((err: Error) => {
-  //     console.log('Failed to load sensor data into DB', err);
-  //     return Promise.reject(err);
-  //   });
   await psdr.upsertAll(sensorDataList).then(
     (data: any) => {
       console.log('data upserted');

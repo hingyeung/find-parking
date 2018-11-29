@@ -2,5 +2,10 @@
   "UploadParkingSensorDataToDBFunction": {
     "NODE_ENV": "sam_local",
     "PARKING_SENSOR_DATA_TABLE": "ParkingSensorDataTable"
+  },
+  "DownloadParkingSensorDataFunction": {
+    "NODE_ENV": "sam_local",
+    "TARGET_BUCKET": "melb-city-parking-sensor-data",
+    "TARGET_PREFIX": "data"
   }
 }

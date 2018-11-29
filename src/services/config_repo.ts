@@ -30,4 +30,4 @@ class ConfigRepo {
   }
 }
 
-module.exports = ConfigRepo;
+export default ConfigRepo;
