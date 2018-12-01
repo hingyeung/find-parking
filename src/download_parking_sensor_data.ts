@@ -26,7 +26,9 @@ const buildDataFilename = () => {
   return `parking-sensor-data_${year}${month}${date}${hr}${min}.json`;
 };
 
-const handler: Handler = (event, context) => {
+const buildS3Path = (bucket: string, key: string) => `s3://${bucket}/${key}`;
+
+const handler: Handler = (event, context, callback) => {
   // download the parking sensor data
   ParkingSensorDataService.downloadLatestParkingSensorData()
     .then((dataList: ParkingSensorData[]) => {
@@ -39,11 +41,15 @@ const handler: Handler = (event, context) => {
           Key: [targetPrefix, outputFile].join('/')
         };
       s3.putObject(s3Params, (err, data) => {
-        if (err) throw err;
+        if (err) callback(err);
         console.log(`Parking sensor data saved in s3: ${outputFile}`);
+        callback(undefined, {parkingSensorDataFile: buildS3Path(s3Params.Bucket, s3Params.Key)});
       });
     })
-    .catch((err: Error) => console.log(err));
+    .catch((err: Error) => {
+      console.log(err);
+      callback(err);
+    });
 };
 
 exports.handler = handler;

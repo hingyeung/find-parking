@@ -47,7 +47,20 @@ Resources:
               "States": {
                 "DownloadParkingSensorDataState": {
                   "Type": "Task",
-                  "Resource": "${lambdaArn}",
+                  "Resource": "${DownloadParkingSensorDataFunctionArn}",
+                  "Catch": [
+                    {
+                      "ErrorEquals": [
+                        "States.ALL"
+                      ],
+                      "Next": "CatchAllFallback"
+                    }
+                  ],
+                  "Next": "UploadParkingSensorDataToDBState"
+                },
+                "UploadParkingSensorDataToDBState": {
+                  "Type": "Task",
+                  "Resource": "${UploadParkingSensorDataToDBFunctionArn}",
                   "Catch": [
                     {
                       "ErrorEquals": [
@@ -65,7 +78,10 @@ Resources:
                 }
               }
             }
-          - {lambdaArn: !GetAtt [ DownloadParkingSensorDataFunction, Arn ]}
+          - {
+            DownloadParkingSensorDataFunctionArn: !GetAtt [ DownloadParkingSensorDataFunction, Arn ],
+            UploadParkingSensorDataToDBFunctionArn: !GetAtt [ UploadParkingSensorDataToDBFunction, Arn ]
+          }
       RoleArn: !GetAtt [ StatesExecutionRole, Arn ]
 
   DownloadParkingSensorDataFunction:

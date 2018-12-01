@@ -1,8 +1,7 @@
 import S3 = require('aws-sdk/clients/s3');
-import { S3Event, S3Handler } from 'aws-lambda';
-
-const ConfigRepo = require('./services/config_repo');
-const ParkingSensorDataRepo = require('./services/parking_sensor_data_repo');
+import { Handler } from 'aws-lambda';
+import ConfigRepo from'./services/config_repo';
+import ParkingSensorDataRepo from './services/parking_sensor_data_repo';
 
 const getS3Options = () => {
   const options = {
@@ -37,21 +36,34 @@ const loadSensorDataIntoDB = async (sensorDataList: ParkingSensorData[]) => {
     }
   ).catch(
     (err: Error) => {
-    console.log('Failed to upsert sensor data', err);
-    return Promise.reject(err);
-  });
+      console.log('Failed to upsert sensor data', err);
+      return Promise.reject(err);
+    });
 };
 
-
-const s3Handler: S3Handler = async (event: S3Event) => {
-  const srcBucket = event.Records[0].s3.bucket.name;
-  // Object key may have spaces or unicode non-ASCII characters.
-  const srcKey =
-    decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '));
-  console.log(`Lambda function triggered by ${srcBucket}/${srcKey}`);
-
-  const sensorDataList = await getSensorDataFromS3(srcBucket, srcKey);
-  await loadSensorDataIntoDB(sensorDataList);
+const parseS3Url = (s3Url: string): {bucket: string, key: string} => {
+  if (!s3Url) throw new Error(`invalid s3 url: ${s3Url}`);
+  const matched = s3Url.match(/^s3:\/\/(.+?)\/(.+)$/);
+  if (!matched) throw new Error(`invalid s3 url: ${s3Url}`);
+  return {
+    bucket: matched[1],
+    // Object key may have spaces or unicode non-ASCII characters.
+    key: decodeURIComponent(matched[2].replace(/\+/g, ' '))
+  };
 };
 
-exports.handler = s3Handler;
+const handler: Handler = async (event, context, callback) => {
+  try {
+    console.log(event);
+    console.log(event.parkingSensorDataFile);
+    const s3Src = parseS3Url(event.parkingSensorDataFile);
+    const sensorDataList = await getSensorDataFromS3(s3Src.bucket, s3Src.key);
+    await loadSensorDataIntoDB(sensorDataList);
+    callback(undefined, 'Parking sensor data loaded into database');
+  } catch (err) {
+    console.log(`failed to load S3 ${event.parkingSensorDataFile} into DB`);
+    callback(err);
+  }
+};
+
+export {handler};

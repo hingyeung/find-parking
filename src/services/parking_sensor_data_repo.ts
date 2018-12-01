@@ -1,8 +1,7 @@
 import { AWSError, DynamoDB } from 'aws-sdk';
-import { GeoDataManager, GeoDataManagerConfiguration } from 'dynamodb-geo';
+import { GeoDataManager, GeoTableUtil, GeoDataManagerConfiguration } from 'dynamodb-geo';
+import ConfigRepo from './config_repo';
 
-const ddbGeo = require('dynamodb-geo');
-const ConfigRepo = require('./config_repo');
 const PARKING_SENSOR_DATA_TABLE = process.env.PARKING_SENSOR_DATA_TABLE;
 
 class ParkingSensorDataRepo {
@@ -12,16 +11,16 @@ class ParkingSensorDataRepo {
 
   constructor() {
     this.ddb = new DynamoDB(ConfigRepo.getDynamoDBConfigs());
-    this.ddbGeoConfig = new ddbGeo.GeoDataManagerConfiguration(this.ddb, PARKING_SENSOR_DATA_TABLE);
+    this.ddbGeoConfig = new GeoDataManagerConfiguration(this.ddb, PARKING_SENSOR_DATA_TABLE);
     this.ddbGeoConfig.hashKeyLength = 7;
-    this.ddbGeoDataManager = new ddbGeo.GeoDataManager(this.ddbGeoConfig);
+    this.ddbGeoDataManager = new GeoDataManager(this.ddbGeoConfig);
 
     this._get = this._get.bind(this);
     this._put = this._put.bind(this);
   }
 
   createTable() {
-    const createTableInput = ddbGeo.GeoTableUtil.getCreateTableRequest(this.ddbGeoConfig);
+    const createTableInput = GeoTableUtil.getCreateTableRequest(this.ddbGeoConfig);
     createTableInput.ProvisionedThroughput.ReadCapacityUnits = 2;
     createTableInput.ProvisionedThroughput.WriteCapacityUnits = 2;
     // createTableInput.AttributeDefinitions.push({AttributeName: "status", AttributeType: "S"})
@@ -111,4 +110,4 @@ class ParkingSensorDataRepo {
   }
 }
 
-module.exports = ParkingSensorDataRepo;
+export default ParkingSensorDataRepo;
