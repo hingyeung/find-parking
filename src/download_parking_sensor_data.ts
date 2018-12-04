@@ -2,6 +2,7 @@ import { Handler } from 'aws-lambda';
 import ParkingSensorDataService from './services/parking_sensor_data_service';
 import S3 = require('aws-sdk/clients/s3');
 import ConfigRepo from './services/config_repo';
+import 'source-map-support/register';
 
 const targetBucket = process.env.TARGET_BUCKET || '',
   targetPrefix = process.env.TARGET_PREFIX || '';

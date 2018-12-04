@@ -8,7 +8,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const target = minimist(process.argv.slice(2)).TARGET;
 
 const webpackConfig = {
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   entry: `./src/${target}.ts`,
   output: {
     pathinfo: false,
@@ -33,6 +33,11 @@ const webpackConfig = {
             experimentalWatchApi: true,
           },
         }],
+      },
+      {
+        test: /\.js$/,
+        use: ["source-map-loader"],
+        enforce: "pre"
       }
     ]
   },

@@ -2,6 +2,7 @@ import S3 = require('aws-sdk/clients/s3');
 import { Handler } from 'aws-lambda';
 import ConfigRepo from'./services/config_repo';
 import ParkingSensorDataRepo from './services/parking_sensor_data_repo';
+import 'source-map-support/register';
 
 const getS3Options = () => {
   const options = {
