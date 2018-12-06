@@ -1,6 +1,7 @@
 import { AWSError, DynamoDB } from 'aws-sdk';
 import { GeoDataManager, GeoTableUtil, GeoDataManagerConfiguration } from 'dynamodb-geo';
 import ConfigRepo from './config_repo';
+import { GeoPoint } from 'dynamodb-geo/dist/types';
 
 const PARKING_SENSOR_DATA_TABLE = process.env.PARKING_SENSOR_DATA_TABLE;
 
@@ -106,6 +107,14 @@ class ParkingSensorDataRepo {
           }
         });
       }
+    });
+  }
+
+  radiusQuery(latitude: number, longitude: number, radiusInMeter: number): Promise<any> {
+    const centrePoint: GeoPoint = { latitude: latitude, longitude: longitude };
+    return this.ddbGeoDataManager.queryRadius({
+      RadiusInMeter: radiusInMeter,
+      CenterPoint: centrePoint
     });
   }
 }

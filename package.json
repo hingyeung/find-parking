@@ -11,8 +11,10 @@
     "seed_data": "./node_modules/webpack/bin/webpack.js --mode=development --TARGET=create_parking_sensor_table && PARKING_SENSOR_DATA_TABLE=ParkingSensorDataTable node ./dist/create_parking_sensor_table_bundle.js && ./scripts/seed_data.sh",
     "watch_load_data_from_s3": "./node_modules/webpack/bin/webpack.js --TARGET=load_sensor_data_into_db --watch",
     "watch_download_parking_sensor_data": "./node_modules/webpack/bin/webpack.js --TARGET=download_parking_sensor_data --watch",
+    "watch_parking_sensor_query_handler": "./node_modules/webpack/bin/webpack.js --TARGET=parking_sensor_query_handler --watch",
     "run_load_data_from_s3": "./scripts/load_data_from_s3_to_db.sh data/events/event_for_loading_sensor_data_into_db.json",
     "run_download_parking_sensor_data": "./scripts/download_parking_sensor_data.sh data/events/manual_trigger.json",
+    "run_parking_sensor_query_handler": "./scripts/parking_sensor_query_handler.sh data/events/radius_query.json",
     "debug_download_parking_sensor_data": "./scripts/download_parking_sensor_data.sh data/events/manual_trigger.json -d 5858",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

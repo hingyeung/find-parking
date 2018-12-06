@@ -102,6 +102,21 @@ Resources:
           BucketName: !Ref dataBucket
       - AWSLambdaBasicExecutionRole
 
+  ParkingSensorQueryHandlerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: parking_sensor_query_handler_bundle.handler
+      Runtime: nodejs8.10
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          NODE_ENV: 'production'
+          PARKING_SENSOR_DATA_TABLE: !Ref ParkingSensorDataTable
+      Policies:
+      - AWSLambdaBasicExecutionRole
+
   UploadParkingSensorDataToDBFunction:
     Type: AWS::Serverless::Function
     Properties:
