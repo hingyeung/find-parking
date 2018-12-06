@@ -2,6 +2,6 @@
   "queryStringParameters": {
     "lat": "-37.8109607",
     "lng": "144.9633703",
-    "radiusInMeter": "300"
+    "radiusInMeter": "250"
   }
 }

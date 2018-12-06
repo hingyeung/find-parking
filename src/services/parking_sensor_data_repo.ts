@@ -4,6 +4,7 @@ import ConfigRepo from './config_repo';
 import { GeoPoint } from 'dynamodb-geo/dist/types';
 
 const PARKING_SENSOR_DATA_TABLE = process.env.PARKING_SENSOR_DATA_TABLE;
+const UNOCCUPIED = 'Unoccupied';
 
 class ParkingSensorDataRepo {
   private ddb: DynamoDB;
@@ -52,8 +53,8 @@ class ParkingSensorDataRepo {
         // It fills the Key for "update" and "add".
         // Typescript type definition demands the Key attribute to be presences
         Key: {
-          bay_id: { S: sensorData.bay_id },
-          status: { S: sensorData.status }
+          bay_id: {S: sensorData.bay_id},
+          status: {S: sensorData.status}
         }
       }
     };
@@ -97,7 +98,7 @@ class ParkingSensorDataRepo {
         // return _update(data, original);
       } else {
         // 3. Otherwise, put the item
-        return this._put(sensorData).catch( (err: AWSError) => {
+        return this._put(sensorData).catch((err: AWSError) => {
           if (err.code === 'ConditionalCheckFailedException') {
             // 3a. Only 1 of the concurrent puts will succeed,
             // the rest should retry recursively
@@ -110,11 +111,13 @@ class ParkingSensorDataRepo {
     });
   }
 
-  radiusQuery(latitude: number, longitude: number, radiusInMeter: number): Promise<any> {
-    const centrePoint: GeoPoint = { latitude: latitude, longitude: longitude };
+  findUnoccupiedParkingWithinRadius(latitude: number, longitude: number, radiusInMeter: number): Promise<any> {
+    const centrePoint: GeoPoint = {latitude: latitude, longitude: longitude};
     return this.ddbGeoDataManager.queryRadius({
       RadiusInMeter: radiusInMeter,
       CenterPoint: centrePoint
+    }).then(parkingList => {
+      return Promise.resolve(parkingList.filter(parking => parking.status.S === UNOCCUPIED));
     });
   }
 }

@@ -19,9 +19,13 @@ const handler: APIGatewayProxyHandler = (event: APIGatewayEvent, context: Contex
 
     callback(undefined, buildAPIGWProxyResult(400, 'Bad Request'));
   }
-  psdr.radiusQuery(lat, lng, radiusInMeter)
-    .then((matchedPoints: DynamoDB.ItemList[]) => {
-      console.log(matchedPoints);
+  psdr.findUnoccupiedParkingWithinRadius(lat, lng, radiusInMeter)
+    .then((matchedPoints: DynamoDB.ItemList) => {
+      console.log(`Found ${matchedPoints.length} unoccupied parking spaces`);
+      matchedPoints.forEach(matched => {
+        const location = JSON.parse(matched.geoJson.S);
+        console.log(location.coordinates[1], location.coordinates[0]);
+      });
       callback(undefined, buildAPIGWProxyResult(200, 'OK'));
     })
     .catch((err) => {
