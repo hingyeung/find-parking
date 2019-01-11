@@ -15,6 +15,7 @@
     "run_load_data_from_s3": "./scripts/load_data_from_s3_to_db.sh data/events/event_for_loading_sensor_data_into_db.json",
     "run_download_parking_sensor_data": "./scripts/download_parking_sensor_data.sh data/events/manual_trigger.json",
     "run_parking_sensor_query_handler": "./scripts/parking_sensor_query_handler.sh data/events/radius_query.json",
+    "run_parking_sensor_query_api": "./scripts/parking_sensor_query_api.sh",
     "debug_download_parking_sensor_data": "./scripts/download_parking_sensor_data.sh data/events/manual_trigger.json -d 5858",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

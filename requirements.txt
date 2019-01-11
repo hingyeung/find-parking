@@ -1,9 +1,6 @@
 airspeed==0.5.5.dev20160812
 arrow==0.12.1
 asn1crypto==0.24.0
-aws-sam-cli==0.6.1
-aws-sam-translator==1.7.0
-aws-xray-sdk==0.95
 awscli==1.16.49
 backports.functools-lru-cache==1.5
 backports.ssl-match-hostname==3.5.0.1

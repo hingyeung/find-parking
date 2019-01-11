@@ -116,6 +116,12 @@ Resources:
           PARKING_SENSOR_DATA_TABLE: !Ref ParkingSensorDataTable
       Policies:
       - AWSLambdaBasicExecutionRole
+      Events:
+        ParkingSensorQueryAPI:
+          Type: Api
+          Properties:
+            Path: '/findAvailableParkings'
+            Method: GET
 
   UploadParkingSensorDataToDBFunction:
     Type: AWS::Serverless::Function

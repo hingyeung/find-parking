@@ -117,6 +117,7 @@ class ParkingSensorDataRepo {
       RadiusInMeter: radiusInMeter,
       CenterPoint: centrePoint
     }).then(parkingList => {
+      console.log(`Found ${parkingList.length} parking spaces`);
       return Promise.resolve(parkingList.filter(parking => parking.status.S === UNOCCUPIED));
     });
   }

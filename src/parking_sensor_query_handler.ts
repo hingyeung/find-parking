@@ -2,6 +2,7 @@ import { APIGatewayEvent, APIGatewayProxyHandler, APIGatewayProxyResult, Callbac
 import ParkingSensorDataRepo from './services/parking_sensor_data_repo';
 import { DynamoDB } from 'aws-sdk';
 import 'source-map-support/register';
+import { ParkingSpace } from './types';
 
 const buildAPIGWProxyResult = (statusCode: number, body: string): APIGatewayProxyResult => {
   return {
@@ -22,11 +23,16 @@ const handler: APIGatewayProxyHandler = (event: APIGatewayEvent, context: Contex
   psdr.findUnoccupiedParkingWithinRadius(lat, lng, radiusInMeter)
     .then((matchedPoints: DynamoDB.ItemList) => {
       console.log(`Found ${matchedPoints.length} unoccupied parking spaces`);
+      const unoccupiedParkingSpaces: ParkingSpace[] = [];
       matchedPoints.forEach(matched => {
         const location = JSON.parse(matched.geoJson.S);
-        console.log(location.coordinates[1], location.coordinates[0]);
+        const parkingSpace: ParkingSpace = {
+          coordinates: {lat: location.coordinates[1], lng: location.coordinates[0]},
+          bay_id: matched.bay_id.S
+        };
+        unoccupiedParkingSpaces.push(parkingSpace);
       });
-      callback(undefined, buildAPIGWProxyResult(200, 'OK'));
+      callback(undefined, buildAPIGWProxyResult(200, JSON.stringify(unoccupiedParkingSpaces)));
     })
     .catch((err) => {
       callback(err);
