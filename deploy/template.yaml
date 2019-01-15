@@ -102,6 +102,12 @@ Resources:
           BucketName: !Ref dataBucket
       - AWSLambdaBasicExecutionRole
 
+  DownloadParkingSensorDataFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref DownloadParkingSensorDataFunction ] ]
+      RetentionInDays: 7
+
   ParkingSensorQueryHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -115,13 +121,21 @@ Resources:
           NODE_ENV: 'production'
           PARKING_SENSOR_DATA_TABLE: !Ref ParkingSensorDataTable
       Policies:
-      - AWSLambdaBasicExecutionRole
+        - DynamoDBReadPolicy:
+            TableName: !Join ['/', [!Ref ParkingSensorDataTable, '*']]
+        - AWSLambdaBasicExecutionRole
       Events:
         ParkingSensorQueryAPI:
           Type: Api
           Properties:
             Path: '/findAvailableParkings'
             Method: GET
+
+  ParkingSensorQueryHandlerFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref ParkingSensorQueryHandlerFunction ] ]
+      RetentionInDays: 7
 
   UploadParkingSensorDataToDBFunction:
     Type: AWS::Serverless::Function
@@ -141,6 +155,12 @@ Resources:
         - S3ReadPolicy:
             BucketName: !Ref dataBucket
         - AWSLambdaBasicExecutionRole
+
+  UploadParkingSensorDataToDBFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref UploadParkingSensorDataToDBFunction ] ]
+      RetentionInDays: 7
 
   # AWS::Serverless::SimpleTable does not support range key
   ParkingSensorDataTable:
@@ -170,13 +190,7 @@ Resources:
       ProvisionedThroughput:
         WriteCapacityUnits: 10
         ReadCapacityUnits: 10
-
-  FindParkingLambdaFunctionLog:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref UploadParkingSensorDataToDBFunction ] ]
-      RetentionInDays: 5
-
+        
 Outputs:
   UploadParkingSensorDataToDBFunction:
     Description: "UploadParkingSensorDataToDBFunction Lambda Function ARN"
