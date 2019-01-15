@@ -192,6 +192,7 @@ Resources:
         ReadCapacityUnits: 10
         
 Outputs:
-  UploadParkingSensorDataToDBFunction:
-    Description: "UploadParkingSensorDataToDBFunction Lambda Function ARN"
-    Value: !GetAtt UploadParkingSensorDataToDBFunction.Arn
+  ParkingSensorQueryHandlerApiUrl:
+    Description: "URL for parking sensor query handler"
+    # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/findAvailableParkings"
