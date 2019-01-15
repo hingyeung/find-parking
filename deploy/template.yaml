@@ -196,3 +196,7 @@ Outputs:
     Description: "URL for parking sensor query handler"
     # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/findAvailableParkings"
+
+  IngestParkingSensorDataStateMachineArn:
+    Description: ARN of state machine that ingests parking sensor data
+    Value: !Ref IngestParkingSensorDataStateMachine
