@@ -4,6 +4,6 @@ export interface Point {
 }
 
 export interface ParkingSpace {
-  coordinates: Point;
+  coordinate: Point;
   bay_id: string;
 }

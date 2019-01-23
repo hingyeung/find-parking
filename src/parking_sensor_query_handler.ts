@@ -27,7 +27,7 @@ const handler: APIGatewayProxyHandler = (event: APIGatewayEvent, context: Contex
       matchedPoints.forEach(matched => {
         const location = JSON.parse(matched.geoJson.S);
         const parkingSpace: ParkingSpace = {
-          coordinates: {lat: location.coordinates[1], lng: location.coordinates[0]},
+          coordinate: {lat: location.coordinate[1], lng: location.coordinate[0]},
           bay_id: matched.bay_id.S
         };
         unoccupiedParkingSpaces.push(parkingSpace);
