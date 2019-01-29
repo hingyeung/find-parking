@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start_localstack": "./scripts/start_localstack.sh",
-    "seed_data": "./node_modules/webpack/bin/webpack.js --mode=development --TARGET=create_parking_sensor_table && PARKING_SENSOR_DATA_TABLE=ParkingSensorDataTable node ./dist/create_parking_sensor_table_bundle.js && ./scripts/seed_data.sh",
+    "seed_data": "./node_modules/webpack/bin/webpack.js --mode=development --TARGET=create_parking_sensor_table && PARKING_SENSOR_DATA_TABLE=ParkingSensorDataTable PARKING_RESTRICTIONS_DATA_TABLE=ParkingRestrictionsDataTable node ./dist/create_parking_sensor_table_bundle.js && ./scripts/seed_data.sh",
     "watch_load_parking_sensor_data_from_s3": "./node_modules/webpack/bin/webpack.js --TARGET=load_sensor_data_into_db --watch",
     "watch_load_parking_restrictions_data_from_s3": "./node_modules/webpack/bin/webpack.js --TARGET=load_restrictions_data_into_db --watch",
     "watch_download_parking_sensor_data": "./node_modules/webpack/bin/webpack.js --TARGET=download_parking_sensor_data --watch",
