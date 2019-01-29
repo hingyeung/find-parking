@@ -6,7 +6,12 @@
   "DownloadParkingSensorDataFunction": {
     "NODE_ENV": "sam_local",
     "TARGET_BUCKET": "melb-city-parking-sensor-data",
-    "TARGET_PREFIX": "data"
+    "TARGET_PREFIX": "parking_sensor"
+  },
+  "DownloadParkingRestrictionsDataFunction": {
+    "NODE_ENV": "sam_local",
+    "TARGET_BUCKET": "melb-city-parking-sensor-data",
+    "TARGET_PREFIX": "parking_restrictions"
   },
   "ParkingSensorQueryHandlerFunction": {
     "NODE_ENV": "sam_local",

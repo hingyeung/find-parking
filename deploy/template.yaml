@@ -108,6 +108,31 @@ Resources:
       LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref DownloadParkingSensorDataFunction ] ]
       RetentionInDays: 7
 
+  DownloadParkingRestrictionsDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: download_parking_restrictions_data_bundle.handler
+      Runtime: nodejs8.10
+      MemorySize: 128
+      Timeout: 30
+      Environment:
+        Variables:
+          NODE_ENV: 'production'
+          TARGET_BUCKET: !Ref dataBucket
+          TARGET_PREFIX: !Ref downloadDestPrefix
+      Policies:
+      - S3CrudPolicy:
+          BucketName: !Ref dataBucket
+      - AWSLambdaBasicExecutionRole
+
+  DownloadParkingRestrictionsDataFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref DownloadParkingRestrictionsDataFunction ] ]
+      RetentionInDays: 7
+
+
   ParkingSensorQueryHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
