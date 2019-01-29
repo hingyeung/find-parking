@@ -4,7 +4,7 @@
   "description": "https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000",
   "main": "index.js",
   "engines": {
-    "node": ">=8.11.4 <9.0.0"
+    "node": ">=8.10 <8.11"
   },
   "scripts": {
     "start_localstack": "./scripts/start_localstack.sh",
