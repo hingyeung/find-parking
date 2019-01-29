@@ -56,11 +56,11 @@ Resources:
                       "Next": "CatchAllFallback"
                     }
                   ],
-                  "Next": "UploadParkingSensorDataToDBState"
+                  "Next": "LoadParkingSensorDataToDBState"
                 },
-                "UploadParkingSensorDataToDBState": {
+                "LoadParkingSensorDataToDBState": {
                   "Type": "Task",
-                  "Resource": "${UploadParkingSensorDataToDBFunctionArn}",
+                  "Resource": "${LoadParkingSensorDataToDBFunctionArn}",
                   "Catch": [
                     {
                       "ErrorEquals": [
@@ -80,7 +80,7 @@ Resources:
             }
           - {
             DownloadParkingSensorDataFunctionArn: !GetAtt [ DownloadParkingSensorDataFunction, Arn ],
-            UploadParkingSensorDataToDBFunctionArn: !GetAtt [ UploadParkingSensorDataToDBFunction, Arn ]
+            LoadParkingSensorDataToDBFunctionArn: !GetAtt [ LoadParkingSensorDataToDBFunction, Arn ]
           }
       RoleArn: !GetAtt [ StatesExecutionRole, Arn ]
 
@@ -132,7 +132,6 @@ Resources:
       LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref DownloadParkingRestrictionsDataFunction ] ]
       RetentionInDays: 7
 
-
   ParkingSensorQueryHandlerFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -162,7 +161,7 @@ Resources:
       LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref ParkingSensorQueryHandlerFunction ] ]
       RetentionInDays: 7
 
-  UploadParkingSensorDataToDBFunction:
+  LoadParkingSensorDataToDBFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ../dist
@@ -181,10 +180,35 @@ Resources:
             BucketName: !Ref dataBucket
         - AWSLambdaBasicExecutionRole
 
-  UploadParkingSensorDataToDBFunctionLogGroup:
+  LoadParkingSensorDataToDBFunctionLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref UploadParkingSensorDataToDBFunction ] ]
+      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref LoadParkingSensorDataToDBFunction ] ]
+      RetentionInDays: 7
+
+  LoadParkingRestrictionsDataToDBFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ../dist
+      Handler: load_restrictions_data_into_db_bundle.handler
+      Runtime: nodejs8.10
+      MemorySize: 256
+      Timeout: 120
+      Environment:
+        Variables:
+          NODE_ENV: 'production'
+          PARKING_RESTRICTIONS_DATA_TABLE: !Ref ParkingSensorRestrictionsTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ParkingSensorRestrictionsTable
+        - S3ReadPolicy:
+            BucketName: !Ref dataBucket
+        - AWSLambdaBasicExecutionRole
+
+  LoadParkingRestrictionsDataToDBFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref LoadParkingRestrictionsDataToDBFunction ] ]
       RetentionInDays: 7
 
   # AWS::Serverless::SimpleTable does not support range key

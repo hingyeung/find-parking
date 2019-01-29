@@ -1,17 +1,21 @@
 {
-  "UploadParkingSensorDataToDBFunction": {
+  "LoadParkingSensorDataToDBFunction": {
     "NODE_ENV": "sam_local",
     "PARKING_SENSOR_DATA_TABLE": "ParkingSensorDataTable"
   },
+  "LoadParkingRestrictionsDataToDBFunction": {
+    "NODE_ENV": "sam_local",
+    "PARKING_RESTRICTIONS_DATA_TABLE": "ParkingSensorRestrictionsTable"
+  },
   "DownloadParkingSensorDataFunction": {
     "NODE_ENV": "sam_local",
-    "TARGET_BUCKET": "melb-city-parking-sensor-data",
-    "TARGET_PREFIX": "parking_sensor"
+    "TARGET_BUCKET": "melb-city-parking-data",
+    "TARGET_PREFIX": "parking-sensor"
   },
   "DownloadParkingRestrictionsDataFunction": {
     "NODE_ENV": "sam_local",
-    "TARGET_BUCKET": "melb-city-parking-sensor-data",
-    "TARGET_PREFIX": "parking_restrictions"
+    "TARGET_BUCKET": "melb-city-parking-data",
+    "TARGET_PREFIX": "parking-restrictions"
   },
   "ParkingSensorQueryHandlerFunction": {
     "NODE_ENV": "sam_local",

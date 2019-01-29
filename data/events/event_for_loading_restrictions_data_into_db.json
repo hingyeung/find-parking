@@ -1,0 +1,3 @@
+{
+  "parkingRestrictionsDataFile": "s3://melb-city-parking-data/parking-restrictions/melb-3000_parking-restrictions.json"
+}

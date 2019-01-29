@@ -1,3 +1,3 @@
 {
-  "parkingSensorDataFile": "s3://melb-city-parking-sensor-data/melb-3000_parking-sensor.json"
+  "parkingSensorDataFile": "s3://melb-city-parking-data/parking-sensor/melb-3000_parking-sensor.json"
 }

@@ -44,9 +44,8 @@ const handler: Handler = (event, context, callback) => {
       s3.putObject(s3Params, (err, data) => {
         if (err) callback(err);
         console.log(`Parking restriction data saved in s3://${s3Params.Bucket}/${s3Params.Key}`);
-        callback(undefined, {parkingSensorDataFile: buildS3Path(s3Params.Bucket, s3Params.Key)});
+        callback(undefined, {parkingRestrictionsDataFile: buildS3Path(s3Params.Bucket, s3Params.Key)});
       });
-      callback(undefined, {parkingSensorDataFile: buildS3Path(s3Params.Bucket, s3Params.Key)});
     })
     .catch((err: Error) => {
       console.log(err);
