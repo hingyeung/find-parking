@@ -5,7 +5,7 @@
   },
   "LoadParkingRestrictionsDataToDBFunction": {
     "NODE_ENV": "sam_local",
-    "PARKING_RESTRICTIONS_DATA_TABLE": "ParkingSensorRestrictionsTable"
+    "PARKING_RESTRICTIONS_DATA_TABLE": "ParkingRestrictionsDataTable"
   },
   "DownloadParkingSensorDataFunction": {
     "NODE_ENV": "sam_local",
