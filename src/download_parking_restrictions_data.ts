@@ -2,7 +2,7 @@ import { Handler } from 'aws-lambda';
 import S3 = require('aws-sdk/clients/s3');
 import ConfigRepo from './services/config_repo';
 import ParkingRestrictionsDataService from './services/parking_restrictions_data_service';
-import { ParkingRestrictionData } from './types';
+import { ParkingRestrictionSrcData } from './types';
 import 'source-map-support/register';
 
 const targetBucket = process.env.TARGET_BUCKET || '',
@@ -32,7 +32,7 @@ const buildS3Path = (bucket: string, key: string) => `s3://${bucket}/${key}`;
 
 const handler: Handler = (event, context, callback) => {
   ParkingRestrictionsDataService.downloadParkingRestrictionsData()
-    .then((restrictionList: ParkingRestrictionData[]) => {
+    .then((restrictionList: ParkingRestrictionSrcData[]) => {
       // write the downloaded data to s3
       const outputFile = buildDataFilename(),
         s3 = new S3(getS3Options()),

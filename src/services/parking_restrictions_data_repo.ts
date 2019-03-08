@@ -1,6 +1,6 @@
 import { AWSError, DynamoDB } from 'aws-sdk';
 import ConfigRepo from './config_repo';
-import { ParkingRestrictionData } from '../types';
+import { ParkingRestrictionSrcData } from '../types';
 import { DocumentClient, PutItemInput } from 'aws-sdk/clients/dynamodb';
 
 const PARKING_RESTRICTIONS_DATA_TABLE = process.env.PARKING_RESTRICTIONS_DATA_TABLE;
@@ -61,7 +61,7 @@ class ParkingRestrictionsDataRepo {
     return this.docClient.get(getParkingRestrictionByBayIdParam).promise();
   }
 
-  _put(parkingRestriction: ParkingRestrictionData) {
+  _put(parkingRestriction: ParkingRestrictionSrcData) {
     const putParkingRestrictionInput: DocumentClient.PutItemInput = {
       TableName: PARKING_RESTRICTIONS_DATA_TABLE,
       Item: {
@@ -74,7 +74,7 @@ class ParkingRestrictionsDataRepo {
     return this.docClient.put(putParkingRestrictionInput).promise();
   }
 
-  _update(data: ParkingRestrictionData, bayIdToUpdate: string) {
+  _update(data: ParkingRestrictionSrcData, bayIdToUpdate: string) {
     const updateExpression = 'SET deviceId = :dId, description = :description';
     const expressionAttributeValues = {
       ':dId': data.deviceId,
@@ -103,7 +103,7 @@ class ParkingRestrictionsDataRepo {
     });
   }
 
-  upsert(parkingRestriction: ParkingRestrictionData): Promise<any> {
+  upsert(parkingRestriction: ParkingRestrictionSrcData): Promise<any> {
     // 1. Get the original item
     return this._get(parkingRestriction.bayId).then((original) => {
       if (Object.keys(original).length > 0) {
