@@ -1,8 +1,11 @@
 import S3 = require('aws-sdk/clients/s3');
 import { Handler } from 'aws-lambda';
-import ConfigRepo from'./services/config_repo';
+import ConfigRepo from './services/config_repo';
 import ParkingSensorDataRepo from './services/parking_sensor_data_repo';
 import 'source-map-support/register';
+import { ParkingRestrictionMap } from './types';
+import { parseParkingRestrictionSrc } from './helpers/parking_restriction_helper';
+import { getSSMParameter } from './helpers/ssm_helper';
 
 const getS3Options = () => {
   const options = {
@@ -23,6 +26,20 @@ const getSensorDataFromS3 = (srcBucket: string, srcKey: string): Promise<Parking
       } else {
         console.log(`Loaded parking sensor data: ${data.ContentType}, ${data.ContentLength} bytes`);
         resolve(JSON.parse(data.Body.toString()));
+      }
+    });
+  });
+};
+
+const getParkingRestrictionFromS3 = (srcBucket: string, srcKey: string): Promise<ParkingRestrictionMap> => {
+  const s3 = new S3(getS3Options());
+  return new Promise((resolve, reject) => {
+    s3.getObject({Bucket: srcBucket, Key: srcKey}, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        console.log(`Loaded parking restriction data: ${data.ContentType}, ${data.ContentLength} bytes`);
+        resolve(parseParkingRestrictionSrc(JSON.parse(data.Body.toString())));
       }
     });
   });
@@ -57,8 +74,16 @@ const handler: Handler = async (event, context, callback) => {
   try {
     console.log(event);
     console.log(event.parkingSensorDataFile);
-    const s3Src = parseS3Url(event.parkingSensorDataFile);
-    const sensorDataList = await getSensorDataFromS3(s3Src.bucket, s3Src.key);
+    const parkingSensorS3Src = parseS3Url(event.parkingSensorDataFile);
+    // load the latest parking sensor data from S3
+    const sensorDataList = await getSensorDataFromS3(parkingSensorS3Src.bucket, parkingSensorS3Src.key);
+    // load the latest parking restriction ifrom S3
+    const parkingRestrictionS3Bucket = await getSSMParameter('/find-parking/parking-restriction/data/s3-bucket');
+    const parkingRestrictionS3Key = await getSSMParameter('/find-parking/parking-restriction/data/s3-key');
+    const parkingRestrictionMap = await getParkingRestrictionFromS3(parkingRestrictionS3Bucket, parkingRestrictionS3Key);
+
+    // TODO: hydrate parking sensor data with parking restrictions
+
     await loadSensorDataIntoDB(sensorDataList);
     callback(undefined, 'Parking sensor data loaded into database');
   } catch (err) {

@@ -13,8 +13,8 @@ export interface ParkingSpace {
 // Each restriction is a set of columns with a number:
 // FromDay1, ToDay1, StartTime1, EndTime1, etc.
 export type ParkingRestrictionSrcData = {
-  readonly bayId: string;
-  readonly deviceId: string;
+  readonly bayid: string;
+  readonly deviceid: string;
   // A compact, human-readable description of the overall restrictions.
   // TKT A stands for Ticket Area covers multiple bays within that area.
   // DIS ONLY and DIS are both disabled parking spaces
@@ -112,4 +112,27 @@ export type Restriction = {
   readonly toDay: number;
   readonly startTime: string;
   readonly endTime: string;
+};
+
+export enum SSMParameterType {
+  STRING = 'String',
+  STRING_LIST = 'StringList',
+  SECURE_STRING = 'SecureString'
+}
+
+export type SSMGetParameterParam = {
+  readonly Name: string;
+  readonly Type: SSMParameterType;
+  readonly Value: string;
+  readonly Description?: string;
+  readonly Overwrite: boolean;
+};
+
+export type SSMPutParameterParam = {
+  readonly Name: string;
+  readonly WithDecryption: boolean
+};
+
+export type ParkingRestrictionMap = {
+  [bayId: string]: ParkingRestriction
 };

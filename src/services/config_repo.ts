@@ -28,6 +28,14 @@ class ConfigRepo {
       region: configForThisEnv.region
     };
   }
+
+  static getSSMConfigs() {
+    const configForThisEnv = ConfigRepo._getConfigForThisEnv();
+    return {
+      endpoint: configForThisEnv.ssmEndpoint,
+      region: configForThisEnv.region
+    };
+  }
 }
 
 export default ConfigRepo;

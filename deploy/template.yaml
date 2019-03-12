@@ -96,7 +96,7 @@ Resources:
         Variables:
           NODE_ENV: 'production'
           TARGET_BUCKET: !Ref dataBucket
-          TARGET_PREFIX: !Ref downloadDestPrefix
+          TARGET_PREFIX: !Sub "${AWS::StackName}/${downloadDestPrefix}"
       Policies:
       - S3CrudPolicy:
           BucketName: !Ref dataBucket
@@ -120,7 +120,7 @@ Resources:
         Variables:
           NODE_ENV: 'production'
           TARGET_BUCKET: !Ref dataBucket
-          TARGET_PREFIX: !Ref downloadDestPrefix
+          TARGET_PREFIX: !Sub "${AWS::StackName}/${downloadDestPrefix}"
       Policies:
       - S3CrudPolicy:
           BucketName: !Ref dataBucket

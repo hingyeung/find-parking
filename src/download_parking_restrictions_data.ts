@@ -4,6 +4,7 @@ import ConfigRepo from './services/config_repo';
 import ParkingRestrictionsDataService from './services/parking_restrictions_data_service';
 import { ParkingRestrictionSrcData } from './types';
 import 'source-map-support/register';
+import { putSSMParameter } from './helpers/ssm_helper';
 
 const targetBucket = process.env.TARGET_BUCKET || '',
   targetPrefix = process.env.TARGET_PREFIX || '';
@@ -41,10 +42,15 @@ const handler: Handler = (event, context, callback) => {
           Bucket: targetBucket,
           Key: [targetPrefix, outputFile].join('/')
         };
-      s3.putObject(s3Params, (err, data) => {
+      s3.putObject(s3Params, async (err, data) => {
         if (err) callback(err);
-        console.log(`Parking restriction data saved in s3://${s3Params.Bucket}/${s3Params.Key}`);
-        callback(undefined, {parkingRestrictionsDataFile: buildS3Path(s3Params.Bucket, s3Params.Key)});
+        const savedUrl = buildS3Path(s3Params.Bucket, s3Params.Key);
+        console.log(`Parking restriction data saved in ${savedUrl}`);
+        // store the s3 url of the parking restriction file to SSM
+        // TODO parameter path should contain environment name to have different parameter for different env.
+        await putSSMParameter('/find-parking/parking-restriction/data/s3-bucket', s3Params.Bucket);
+        await putSSMParameter('/find-parking/parking-restriction/data/s3-key', s3Params.Key);
+        callback(undefined, {parkingRestrictionsDataFile: savedUrl});
       });
     })
     .catch((err: Error) => {
