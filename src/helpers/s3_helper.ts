@@ -1,4 +1,5 @@
 import ConfigRepo from '../services/config_repo';
+import ParkingSensorData from '../models/parking_sensor_data';
 import S3 = require('aws-sdk/clients/s3');
 
 export const getS3Options = () => {

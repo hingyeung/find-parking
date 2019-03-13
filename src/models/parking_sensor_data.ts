@@ -1,17 +1,22 @@
 // https://dev.socrata.com/foundry/data.melbourne.vic.gov.au/dtpv-d4pf
-class ParkingSensorData {
+
+import { Restriction } from '../types';
+
+export default class ParkingSensorData {
   constructor(
     bay_id: string,
     st_marker_id: string,
     lon: number,
     lat: number,
-    status: string
+    status: string,
+    restrictions: Restriction[] = []
   ) {
     this.bay_id = bay_id;
     this.st_marker_id = st_marker_id;
     this.lon = lon;
     this.lat = lat;
     this.status = status;
+    this.restrictions = restrictions;
   }
 
   // The unique ID of the parking bay where the parking sensor is located
@@ -28,4 +33,6 @@ class ParkingSensorData {
   //  Occupied – A car is present in the parking bay at that time.
   //  Unoccupied – The parking bay is available at that time.
   status: string;
+  // Parking restrictions
+  restrictions?: Restriction[];
 }

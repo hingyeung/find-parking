@@ -6,6 +6,7 @@ import 'source-map-support/register';
 import { ParkingRestrictionMap } from './types';
 import { parseParkingRestrictionSrc } from './helpers/parking_restriction_helper';
 import { getSSMParameter } from './helpers/ssm_helper';
+import ParkingSensorData from './models/parking_sensor_data';
 
 const getS3Options = () => {
   const options = {
@@ -70,6 +71,19 @@ const parseS3Url = (s3Url: string): {bucket: string, key: string} => {
   };
 };
 
+const hydrateParkingSensorDataWithParkingRestriction =
+  (sensorDataList: ParkingSensorData[], parkingRestrictionMap: ParkingRestrictionMap): ParkingSensorData[] => {
+  return sensorDataList.map((sensorData) => {
+    return new ParkingSensorData(
+      sensorData.bay_id,
+      sensorData.st_marker_id,
+      sensorData.lon,
+      sensorData.lat,
+      sensorData.status,
+      parkingRestrictionMap[sensorData.bay_id] ? parkingRestrictionMap[sensorData.bay_id].restriction : undefined);
+  });
+};
+
 const handler: Handler = async (event, context, callback) => {
   try {
     console.log(event);
@@ -82,9 +96,10 @@ const handler: Handler = async (event, context, callback) => {
     const parkingRestrictionS3Key = await getSSMParameter('/find-parking/parking-restriction/data/s3-key');
     const parkingRestrictionMap = await getParkingRestrictionFromS3(parkingRestrictionS3Bucket, parkingRestrictionS3Key);
 
-    // TODO: hydrate parking sensor data with parking restrictions
+    const hydratedSensorDataList = hydrateParkingSensorDataWithParkingRestriction(sensorDataList, parkingRestrictionMap);
 
-    await loadSensorDataIntoDB(sensorDataList);
+    // TODO restriction does not get stored to the DB yet.
+    await loadSensorDataIntoDB(hydratedSensorDataList);
     callback(undefined, 'Parking sensor data loaded into database');
   } catch (err) {
     console.log(`failed to load S3 ${event.parkingSensorDataFile} into DB`);

@@ -2,6 +2,7 @@ import { AWSError, DynamoDB } from 'aws-sdk';
 import { GeoDataManager, GeoDataManagerConfiguration, GeoTableUtil } from 'dynamodb-geo';
 import ConfigRepo from './config_repo';
 import { GeoPoint, UpdatePointInput } from 'dynamodb-geo/dist/types';
+import ParkingSensorData from '../models/parking_sensor_data';
 
 const PARKING_SENSOR_DATA_TABLE = process.env.PARKING_SENSOR_DATA_TABLE;
 const UNOCCUPIED = 'Unoccupied';

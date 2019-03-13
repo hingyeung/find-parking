@@ -105,10 +105,10 @@ class ParkingRestrictionsDataRepo {
 
   upsert(parkingRestriction: ParkingRestrictionSrcData): Promise<any> {
     // 1. Get the original item
-    return this._get(parkingRestriction.bayId).then((original) => {
+    return this._get(parkingRestriction.bayid).then((original) => {
       if (Object.keys(original).length > 0) {
         // 2. Update if item already exists
-        return this._update(parkingRestriction, parkingRestriction.bayId);
+        return this._update(parkingRestriction, parkingRestriction.bayid);
       } else {
         // 3. Otherwise, put the item
         return this._put(parkingRestriction).catch((err: AWSError) => {
