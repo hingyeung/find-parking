@@ -1,4 +1,5 @@
-import { ParkingRestriction, ParkingRestrictionMap, ParkingRestrictionSrcData, Restriction } from '../types';
+import { ParkingRestriction, ParkingRestrictionMap, ParkingRestrictionSrcData } from '../types';
+import { Restriction } from '../models/restriction';
 
 export const parseParkingRestriction = (parkingRestrictionSrcData: ParkingRestrictionSrcData): Restriction[] => {
   // 1. determine the number of restrictions by checking how many fields there are that matches "description\d" pattern

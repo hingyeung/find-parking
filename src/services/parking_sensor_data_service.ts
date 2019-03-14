@@ -1,5 +1,5 @@
 import axios from 'axios';
-import ParkingSensorData from '../models/parking_sensor_data';
+import { ParkingSensorData } from '../models/parking_sensor_data';
 
 const PARKING_SENSOR_DATA_URL = 'https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000';
 class ParkingSensorDataService {

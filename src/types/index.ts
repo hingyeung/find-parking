@@ -1,3 +1,5 @@
+import { Restriction } from '../models/restriction';
+
 export interface Point {
   lat: number;
   lng: number;
@@ -101,23 +103,15 @@ export type ParkingRestriction = {
   readonly restriction: Restriction[];
 };
 
-export type Restriction = {
-  readonly description: string;
-  readonly duration: number;
-  readonly disabilityExt?: number;
-  readonly effectiveOnPH: boolean;
-  readonly exemption?: string;
-  readonly typeDesc: string;
-  readonly fromDay: number;
-  readonly toDay: number;
-  readonly startTime: string;
-  readonly endTime: string;
-};
-
 export enum SSMParameterType {
   STRING = 'String',
   STRING_LIST = 'StringList',
   SECURE_STRING = 'SecureString'
+}
+
+export enum ParkingSensorStatus {
+  UNOCCUPIED = 'Unoccupied',
+  PRESENT = 'Present'
 }
 
 export type SSMGetParameterParam = {

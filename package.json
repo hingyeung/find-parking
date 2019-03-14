@@ -29,11 +29,13 @@
     "axios": "^0.18.0",
     "dynamodb-geo": "^0.4.0",
     "minimist": "^1.2.0",
+    "mongoose": "^5.4.19",
     "source-map-support": "^0.5.9"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.15",
     "@types/aws-sdk": "^2.7.0",
+    "@types/mongoose": "^5.3.22",
     "@types/node": "^10.12.5",
     "awesome-typescript-loader": "^5.2.1",
     "fork-ts-checker-webpack-plugin": "^0.4.15",

@@ -1,23 +1,30 @@
 // https://dev.socrata.com/foundry/data.melbourne.vic.gov.au/dtpv-d4pf
 
-import { Restriction } from '../types';
+import { Schema, Model, Document, model } from 'mongoose';
+import { ParkingSensorStatus } from '../types';
+import { Restriction, RestrictionSchema } from './restriction';
 
-export default class ParkingSensorData {
-  constructor(
-    bay_id: string,
-    st_marker_id: string,
-    lon: number,
-    lat: number,
-    status: string,
-    restrictions: Restriction[] = []
-  ) {
-    this.bay_id = bay_id;
-    this.st_marker_id = st_marker_id;
-    this.lon = lon;
-    this.lat = lat;
-    this.status = status;
-    this.restrictions = restrictions;
-  }
+export interface ParkingSensorData {
+  // constructor(
+  //   bay_id: string,
+  //   st_marker_id: string,
+  //   lon: number,
+  //   lat: number,
+  //   status: ParkingSensorStatus,
+  //   restrictions: Restriction[] = []
+  // ) {
+  //   super();
+  //   this.bay_id = bay_id;
+  //   this.st_marker_id = st_marker_id;
+  //   this.lon = lon;
+  //   this.lat = lat;
+  //   this.status = status;
+  //   this.restrictions = restrictions;
+  // }
+
+  // constructor(init?: Partial<ParkingSensorData>) {
+  //   Object.assign(this, init);
+  // }
 
   // The unique ID of the parking bay where the parking sensor is located
   bay_id: string;
@@ -32,7 +39,23 @@ export default class ParkingSensorData {
   // The status will either display:
   //  Occupied – A car is present in the parking bay at that time.
   //  Unoccupied – The parking bay is available at that time.
-  status: string;
+  status: ParkingSensorStatus;
   // Parking restrictions
   restrictions?: Restriction[];
 }
+
+export interface ParkingSensorDataModel extends Document, ParkingSensorData {}
+
+export const ParkingSensorDataSchema: Schema = new Schema({
+  bay_id: String,
+  st_marker_id: String,
+  lon: Number,
+  lat: Number,
+  status: {
+    type: String,
+    enum: [ParkingSensorStatus.PRESENT, ParkingSensorStatus.UNOCCUPIED]
+  },
+  restrictions: [RestrictionSchema]
+});
+
+export const ParkingSensorDataModel: Model<ParkingSensorDataModel> = model<ParkingSensorDataModel>('ParkingSensorData', ParkingSensorDataSchema);

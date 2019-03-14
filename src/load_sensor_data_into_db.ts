@@ -6,7 +6,7 @@ import 'source-map-support/register';
 import { ParkingRestrictionMap } from './types';
 import { parseParkingRestrictionSrc } from './helpers/parking_restriction_helper';
 import { getSSMParameter } from './helpers/ssm_helper';
-import ParkingSensorData from './models/parking_sensor_data';
+import { ParkingSensorData } from './models/parking_sensor_data';
 
 const getS3Options = () => {
   const options = {
@@ -74,13 +74,14 @@ const parseS3Url = (s3Url: string): {bucket: string, key: string} => {
 const hydrateParkingSensorDataWithParkingRestriction =
   (sensorDataList: ParkingSensorData[], parkingRestrictionMap: ParkingRestrictionMap): ParkingSensorData[] => {
   return sensorDataList.map((sensorData) => {
-    return new ParkingSensorData(
-      sensorData.bay_id,
-      sensorData.st_marker_id,
-      sensorData.lon,
-      sensorData.lat,
-      sensorData.status,
-      parkingRestrictionMap[sensorData.bay_id] ? parkingRestrictionMap[sensorData.bay_id].restriction : undefined);
+    return {
+      bay_id: sensorData.bay_id,
+      st_marker_id: sensorData.st_marker_id,
+      lon: sensorData.lon,
+      lat: sensorData.lat,
+      status: sensorData.status,
+      restrictions: parkingRestrictionMap[sensorData.bay_id] ? parkingRestrictionMap[sensorData.bay_id].restriction : undefined
+    };
   });
 };
 

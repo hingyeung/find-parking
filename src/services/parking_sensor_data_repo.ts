@@ -2,10 +2,12 @@ import { AWSError, DynamoDB } from 'aws-sdk';
 import { GeoDataManager, GeoDataManagerConfiguration, GeoTableUtil } from 'dynamodb-geo';
 import ConfigRepo from './config_repo';
 import { GeoPoint, UpdatePointInput } from 'dynamodb-geo/dist/types';
-import ParkingSensorData from '../models/parking_sensor_data';
+import { ParkingSensorData, ParkingSensorDataModel } from '../models/parking_sensor_data';
+import Mongoose from 'mongoose';
 
 const PARKING_SENSOR_DATA_TABLE = process.env.PARKING_SENSOR_DATA_TABLE;
 const UNOCCUPIED = 'Unoccupied';
+const MONGODB_URI = 'mongodb://mongo:27017/findparkingdb';
 
 class ParkingSensorDataRepo {
   private ddb: DynamoDB;
@@ -20,6 +22,7 @@ class ParkingSensorDataRepo {
 
     this._get = this._get.bind(this);
     this._put = this._put.bind(this);
+    Mongoose.connect(MONGODB_URI, {useNewUrlParser: true});
   }
 
   createTable() {
@@ -118,27 +121,36 @@ class ParkingSensorDataRepo {
     }
   }
 
-  upsert(sensorData: ParkingSensorData): Promise<any> {
-    // 1. Get the original item
-    return this._get(sensorData).then((original) => {
-      if (Object.keys(original).length > 0) {
-        // 2. Update if item already exists and has different status
-        return original.Item.status.S !== sensorData.status ?
-          this._update(sensorData, sensorData.bay_id) :
-          Promise.resolve();
-      } else {
-        // 3. Otherwise, put the item
-        return this._put(sensorData).catch((err: AWSError) => {
-          if (err.code === 'ConditionalCheckFailedException') {
-            // 3a. Only 1 of the concurrent puts will succeed,
-            // the rest should retry recursively
-            return this.upsert(sensorData);
-          } else {
-            throw err;
-          }
-        });
-      }
-    });
+  async upsert(sensorData: ParkingSensorData): Promise<any> {
+    // // 1. Get the original item
+    // return this._get(sensorData).then((original) => {
+    //   if (Object.keys(original).length > 0) {
+    //     // 2. Update if item already exists and has different status
+    //     return original.Item.status.S !== sensorData.status ?
+    //       this._update(sensorData, sensorData.bay_id) :
+    //       Promise.resolve();
+    //   } else {
+    //     // 3. Otherwise, put the item
+    //     return this._put(sensorData).catch((err: AWSError) => {
+    //       if (err.code === 'ConditionalCheckFailedException') {
+    //         // 3a. Only 1 of the concurrent puts will succeed,
+    //         // the rest should retry recursively
+    //         return this.upsert(sensorData);
+    //       } else {
+    //         throw err;
+    //       }
+    //     });
+    //   }
+    // });
+    try {
+      const parkingSensorData = sensorData;
+      const query = {bay_id: parkingSensorData.bay_id};
+      console.log(`Upserting ${parkingSensorData.bay_id} parking bay`);
+      await ParkingSensorDataModel.findOneAndUpdate(query, parkingSensorData, {upsert: true}).exec();
+    } catch (err) {
+      console.log('upsert error', err);
+      return Promise.reject(err);
+    }
   }
 
   findUnoccupiedParkingWithinRadius(latitude: number, longitude: number, radiusInMeter: number): Promise<any> {
