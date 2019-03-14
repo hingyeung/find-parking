@@ -3,6 +3,7 @@
 import { Schema, Model, Document, model } from 'mongoose';
 import { ParkingSensorStatus } from '../types';
 import { Restriction, RestrictionSchema } from './restriction';
+import { GeoJSONPoint, GeoJSONPointSchema } from './geo_json_point';
 
 export interface ParkingSensorData {
   // constructor(
@@ -32,10 +33,8 @@ export interface ParkingSensorData {
   // id for the bay. Often a small round, metal plaque found on the pavement
   // next to the bay
   st_marker_id: string;
-  // The longitude of the parking bay
-  lon: number;
-  // The latitude of the parking bay
-  lat: number;
+  // the location of the parking bay (GeoJSON)
+  location: GeoJSONPoint;
   // The status will either display:
   //  Occupied – A car is present in the parking bay at that time.
   //  Unoccupied – The parking bay is available at that time.
@@ -49,8 +48,7 @@ export interface ParkingSensorDataModel extends Document, ParkingSensorData {}
 export const ParkingSensorDataSchema: Schema = new Schema({
   bay_id: String,
   st_marker_id: String,
-  lon: Number,
-  lat: Number,
+  location: GeoJSONPointSchema,
   status: {
     type: String,
     enum: [ParkingSensorStatus.PRESENT, ParkingSensorStatus.UNOCCUPIED]

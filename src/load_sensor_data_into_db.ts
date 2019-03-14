@@ -7,6 +7,7 @@ import { ParkingRestrictionMap } from './types';
 import { parseParkingRestrictionSrc } from './helpers/parking_restriction_helper';
 import { getSSMParameter } from './helpers/ssm_helper';
 import { ParkingSensorData } from './models/parking_sensor_data';
+import { ParkingSensorSrcData } from './models/parking_sensor_src_data';
 
 const getS3Options = () => {
   const options = {
@@ -18,6 +19,20 @@ const getS3Options = () => {
   return Object.assign({}, options, ConfigRepo.getS3Configs());
 };
 
+const convertParkingSensorSrcData = (srcDataList: ParkingSensorSrcData[]): ParkingSensorData[] => {
+  return srcDataList.map((srcData) => {
+    return {
+      bay_id: srcData.bay_id,
+      st_marker_id: srcData.st_marker_id,
+      status: srcData.status,
+      location: {
+        type: 'Point',
+        coordinates: [srcData.lon, srcData.lat] as [number, number]
+      }
+    };
+  });
+};
+
 const getSensorDataFromS3 = (srcBucket: string, srcKey: string): Promise<ParkingSensorData[]> => {
   const s3 = new S3(getS3Options());
   return new Promise((resolve, reject) => {
@@ -26,7 +41,7 @@ const getSensorDataFromS3 = (srcBucket: string, srcKey: string): Promise<Parking
         reject(err);
       } else {
         console.log(`Loaded parking sensor data: ${data.ContentType}, ${data.ContentLength} bytes`);
-        resolve(JSON.parse(data.Body.toString()));
+        resolve(convertParkingSensorSrcData(JSON.parse(data.Body.toString())));
       }
     });
   });
@@ -77,8 +92,7 @@ const hydrateParkingSensorDataWithParkingRestriction =
     return {
       bay_id: sensorData.bay_id,
       st_marker_id: sensorData.st_marker_id,
-      lon: sensorData.lon,
-      lat: sensorData.lat,
+      location: sensorData.location,
       status: sensorData.status,
       restrictions: parkingRestrictionMap[sensorData.bay_id] ? parkingRestrictionMap[sensorData.bay_id].restriction : undefined
     };
