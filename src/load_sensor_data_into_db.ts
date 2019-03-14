@@ -49,9 +49,9 @@ const getParkingRestrictionFromS3 = (srcBucket: string, srcKey: string): Promise
 const loadSensorDataIntoDB = async (sensorDataList: ParkingSensorData[]) => {
   const psdr = new ParkingSensorDataRepo();
   await psdr.upsertAll(sensorDataList).then(
-    (data: any) => {
+    () => {
       console.log('data upserted');
-      console.dir(data);
+      return Promise.resolve();
     }
   ).catch(
     (err: Error) => {
@@ -87,8 +87,10 @@ const hydrateParkingSensorDataWithParkingRestriction =
 
 const handler: Handler = async (event, context, callback) => {
   try {
+    // lambda does not exit if there is an open connection to mongodb
+    context.callbackWaitsForEmptyEventLoop = false;
     console.log(event);
-    console.log(event.parkingSensorDataFile);
+
     const parkingSensorS3Src = parseS3Url(event.parkingSensorDataFile);
     // load the latest parking sensor data from S3
     const sensorDataList = await getSensorDataFromS3(parkingSensorS3Src.bucket, parkingSensorS3Src.key);
@@ -99,7 +101,6 @@ const handler: Handler = async (event, context, callback) => {
 
     const hydratedSensorDataList = hydrateParkingSensorDataWithParkingRestriction(sensorDataList, parkingRestrictionMap);
 
-    // TODO restriction does not get stored to the DB yet.
     await loadSensorDataIntoDB(hydratedSensorDataList);
     callback(undefined, 'Parking sensor data loaded into database');
   } catch (err) {
