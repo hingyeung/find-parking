@@ -42,7 +42,7 @@ Resources:
         !Sub
           - |-
             {
-              "Comment": "Download Melbourne City Parking Sensor Data and ingest it into DynamoDB",
+              "Comment": "Download Melbourne City Parking Sensor Data and ingest it into MongoDB",
               "StartAt": "DownloadParkingSensorDataState",
               "States": {
                 "DownloadParkingSensorDataState": {
@@ -143,10 +143,7 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: 'production'
-          PARKING_SENSOR_DATA_TABLE: !Ref ParkingSensorDataTable
       Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Join ['/', [!Ref ParkingSensorDataTable, '*']]
         - AWSLambdaBasicExecutionRole
       Events:
         ParkingSensorQueryAPI:
@@ -172,10 +169,7 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: 'production'
-          PARKING_SENSOR_DATA_TABLE: !Ref ParkingSensorDataTable
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref ParkingSensorDataTable
         - S3ReadPolicy:
             BucketName: !Ref dataBucket
         - AWSLambdaBasicExecutionRole
@@ -197,10 +191,7 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: 'production'
-          PARKING_RESTRICTIONS_DATA_TABLE: !Ref ParkingSensorRestrictionsTable
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref ParkingSensorRestrictionsTable
         - S3ReadPolicy:
             BucketName: !Ref dataBucket
         - AWSLambdaBasicExecutionRole
@@ -210,35 +201,6 @@ Resources:
     Properties:
       LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref LoadParkingRestrictionsDataToDBFunction ] ]
       RetentionInDays: 7
-
-  # AWS::Serverless::SimpleTable does not support range key
-  ParkingSensorDataTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      AttributeDefinitions:
-        - AttributeName: hashKey
-          AttributeType: N
-        - AttributeName: rangeKey
-          AttributeType: S
-        - AttributeName: geohash
-          AttributeType: N
-      KeySchema:
-        - AttributeName: hashKey
-          KeyType: HASH
-        - AttributeName: rangeKey
-          KeyType: RANGE
-      LocalSecondaryIndexes:
-        - IndexName: geohash-index
-          KeySchema:
-            - AttributeName: hashKey
-              KeyType: HASH
-            - AttributeName: geohash
-              KeyType: RANGE
-          Projection:
-            ProjectionType: ALL
-      ProvisionedThroughput:
-        WriteCapacityUnits: 10
-        ReadCapacityUnits: 10
         
 Outputs:
   ParkingSensorQueryHandlerApiUrl:

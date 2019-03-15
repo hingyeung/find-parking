@@ -9,6 +9,7 @@ PARKING_DATA_DOWNLOAD_DESTINATION_S3_PREFIX=$3
 
 aws cloudformation deploy \
     --template-file ${CF_TEMPLATE} \
+    --region ap-southeast-2 \
     --stack-name ${STACK_NAME} \
     --capabilities CAPABILITY_IAM \
     --parameter-overrides \
