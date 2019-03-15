@@ -1,15 +1,5 @@
 import { Restriction } from '../models/restriction';
 
-export interface Point {
-  lat: number;
-  lng: number;
-}
-
-export interface ParkingSpace {
-  coordinate: Point;
-  bay_id: string;
-}
-
 // https://dev.socrata.com/foundry/data.melbourne.vic.gov.au/ntht-5rk7
 // There can be multiple restrictions, occurring at non-overlapping times.
 // Each restriction is a set of columns with a number:

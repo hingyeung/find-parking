@@ -6,27 +6,6 @@ import { Restriction, RestrictionSchema } from './restriction';
 import { GeoJSONPoint, GeoJSONPointSchema } from './geo_json_point';
 
 export interface ParkingSensorData {
-  // constructor(
-  //   bay_id: string,
-  //   st_marker_id: string,
-  //   lon: number,
-  //   lat: number,
-  //   status: ParkingSensorStatus,
-  //   restrictions: Restriction[] = []
-  // ) {
-  //   super();
-  //   this.bay_id = bay_id;
-  //   this.st_marker_id = st_marker_id;
-  //   this.lon = lon;
-  //   this.lat = lat;
-  //   this.status = status;
-  //   this.restrictions = restrictions;
-  // }
-
-  // constructor(init?: Partial<ParkingSensorData>) {
-  //   Object.assign(this, init);
-  // }
-
   // The unique ID of the parking bay where the parking sensor is located
   bay_id: string;
   // The street marker that is located next to the parking bay with a unique
@@ -45,15 +24,17 @@ export interface ParkingSensorData {
 
 export interface ParkingSensorDataModel extends Document, ParkingSensorData {}
 
-export const ParkingSensorDataSchema: Schema = new Schema({
-  bay_id: String,
+const ParkingSensorDataSchema: Schema = new Schema({
+  bay_id: { type: String, required: true, unique: true },
   st_marker_id: String,
   location: GeoJSONPointSchema,
   status: {
+    required: true,
     type: String,
     enum: [ParkingSensorStatus.PRESENT, ParkingSensorStatus.UNOCCUPIED]
   },
   restrictions: [RestrictionSchema]
 });
+ParkingSensorDataSchema.index({location: '2dsphere'});
 
 export const ParkingSensorDataModel: Model<ParkingSensorDataModel> = model<ParkingSensorDataModel>('ParkingSensorData', ParkingSensorDataSchema);

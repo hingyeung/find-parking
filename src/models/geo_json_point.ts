@@ -5,6 +5,15 @@ export interface GeoJSONPoint {
   coordinates: [number, number];
 }
 
+export class GeoJSONPointClass implements GeoJSONPoint {
+  readonly type: string = 'Point';
+  readonly coordinates: [number, number];
+
+  constructor(longitude: number, latitude: number) {
+    this.coordinates = [longitude, latitude];
+  }
+}
+
 export interface GeoJSONPointModel extends Document, GeoJSONPoint {
 }
 

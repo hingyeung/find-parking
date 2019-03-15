@@ -1,6 +1,6 @@
-import { GeoPoint } from 'dynamodb-geo/dist/types';
 import { ParkingSensorData, ParkingSensorDataModel } from '../models/parking_sensor_data';
 import mongoose from 'mongoose';
+import { GeoJSONPoint, GeoJSONPointClass } from '../models/geo_json_point';
 
 const UNOCCUPIED = 'Unoccupied';
 const MONGODB_URI = 'mongodb://mongo:27017/findparkingdb';
@@ -42,16 +42,14 @@ class ParkingSensorDataRepo {
     }
   }
 
-  // findUnoccupiedParkingWithinRadius(latitude: number, longitude: number, radiusInMeter: number): Promise<any> {
-  //   const centrePoint: GeoPoint = {latitude: latitude, longitude: longitude};
-  //   return this.ddbGeoDataManager.queryRadius({
-  //     RadiusInMeter: radiusInMeter,
-  //     CenterPoint: centrePoint
-  //   }).then(parkingList => {
-  //     console.log(`Found ${parkingList.length} parking spaces`);
-  //     return Promise.resolve(parkingList.filter(parking => parking.status.S === UNOCCUPIED));
-  //   });
-  // }
+  findUnoccupiedParkingWithinRadius(latitude: number, longitude: number, radiusInMeter: number): Promise<any> {
+    const centrePoint: GeoJSONPoint = new GeoJSONPointClass(longitude, latitude);
+    const query = ParkingSensorDataModel.find().where('location').near({
+      center: centrePoint,
+      maxDistance: radiusInMeter
+    }); // .where('status').equals(ParkingSensorStatus.UNOCCUPIED);
+    return query.exec();
+  }
 }
 
 export default ParkingSensorDataRepo;
