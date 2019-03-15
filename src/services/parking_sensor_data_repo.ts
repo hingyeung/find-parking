@@ -1,13 +1,16 @@
 import { ParkingSensorData, ParkingSensorDataModel } from '../models/parking_sensor_data';
 import mongoose from 'mongoose';
 import { GeoJSONPoint, GeoJSONPointClass } from '../models/geo_json_point';
+import ConfigRepo from './config_repo';
 
 const UNOCCUPIED = 'Unoccupied';
-const MONGODB_URI = 'mongodb://mongo:27017/findparkingdb';
+const DB_NAME = 'findparkingdb';
 
 class ParkingSensorDataRepo {
   constructor() {
-    mongoose.connect(MONGODB_URI, {useNewUrlParser: true});
+    const mongodb_uri = ConfigRepo.getMongoDBConfig().uri;
+    mongoose.connect([mongodb_uri, DB_NAME].join('/'), {useNewUrlParser: true});
+
     // Get Mongoose to use the global promise library
     mongoose.Promise = global.Promise;
     // Get the default connection

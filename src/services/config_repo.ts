@@ -13,11 +13,10 @@ class ConfigRepo {
     }
   }
 
-  static getDynamoDBConfigs() {
+  static getMongoDBConfig() {
     const configForThisEnv = ConfigRepo._getConfigForThisEnv();
     return {
-      endpoint: configForThisEnv.dynamodbEndpoint,
-      region: configForThisEnv.region
+      uri: configForThisEnv.mongodb_uri
     };
   }
 
