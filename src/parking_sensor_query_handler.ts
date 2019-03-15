@@ -19,7 +19,6 @@ const handler: APIGatewayProxyHandler = (event: APIGatewayEvent, context: Contex
     lng = parseFloat(event.queryStringParameters['lng']) || undefined,
     radiusInMeter = parseFloat(event.queryStringParameters['radiusInMeter']) || undefined;
   if (!lat || !lng || !radiusInMeter) {
-
     callback(undefined, buildAPIGWProxyResult(400, 'Bad Request'));
   }
   psdr.findUnoccupiedParkingWithinRadius(lat, lng, radiusInMeter)

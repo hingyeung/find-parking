@@ -18,7 +18,7 @@ https://data.melbourne.vic.gov.au/resource/vh2v-4nfs.json?$limit=5000
 1. Run the API locally
   `npm run run_parking_sensor_query_api`
 1. Visit local API
-  `http://127.0.0.1:3000/findAvailableParkings?lat=-37.8147527&lng=144.9647163&radiusInMeter=500`
+  `http://127.0.0.1:3001/findAvailableParkings?lat=-37.8147527&lng=144.9647163&radiusInMeter=500`
 # Deployment
 1. Package the Lambda function  
   `sam package --template-file deploy/template.yaml --s3-bucket <bucket_name> --s3-prefix find-parking/artefacts --output-template-file tmp/find_parking_cfn.yaml`
