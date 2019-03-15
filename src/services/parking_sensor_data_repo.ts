@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import { GeoJSONPoint, GeoJSONPointClass } from '../models/geo_json_point';
 import ConfigRepo from './config_repo';
 
-const UNOCCUPIED = 'Unoccupied';
 const DB_NAME = 'findparkingdb';
 
 class ParkingSensorDataRepo {

@@ -179,28 +179,6 @@ Resources:
     Properties:
       LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref LoadParkingSensorDataToDBFunction ] ]
       RetentionInDays: 7
-
-  LoadParkingRestrictionsDataToDBFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ../dist
-      Handler: load_restrictions_data_into_db_bundle.handler
-      Runtime: nodejs8.10
-      MemorySize: 256
-      Timeout: 120
-      Environment:
-        Variables:
-          NODE_ENV: 'production'
-      Policies:
-        - S3ReadPolicy:
-            BucketName: !Ref dataBucket
-        - AWSLambdaBasicExecutionRole
-
-  LoadParkingRestrictionsDataToDBFunctionLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref LoadParkingRestrictionsDataToDBFunction ] ]
-      RetentionInDays: 7
         
 Outputs:
   ParkingSensorQueryHandlerApiUrl:
