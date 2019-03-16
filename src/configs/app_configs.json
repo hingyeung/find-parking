@@ -12,6 +12,7 @@
     "ssmEndpoint": "http://localstack:4583"
   },
   "production": {
-    "region": "ap-southeast-2"
+    "region": "ap-southeast-2",
+    "mongodb_uri": "read from SSM"
   }
 }

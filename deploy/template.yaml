@@ -125,12 +125,13 @@ Resources:
       - S3CrudPolicy:
           BucketName: !Ref dataBucket
       - AWSLambdaBasicExecutionRole
-
-  DownloadParkingRestrictionsDataFunctionLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Join [ '/', [ "/aws/lambda", !Ref DownloadParkingRestrictionsDataFunction ] ]
-      RetentionInDays: 7
+      - Statement:
+        - Sid: SSMGetParameter
+          Effect: Allow
+          Action:
+            - ssm:PutParameter
+            - ssm:PutParameters
+          Resource: "arn:aws:ssm:*:*:parameter/find-parking/*"
 
   ParkingSensorQueryHandlerFunction:
     Type: AWS::Serverless::Function
@@ -173,6 +174,8 @@ Resources:
         - S3ReadPolicy:
             BucketName: !Ref dataBucket
         - AWSLambdaBasicExecutionRole
+        - SSMParameterReadPolicy:
+            ParameterName: "/find-parking/*"
 
   LoadParkingSensorDataToDBFunctionLogGroup:
     Type: AWS::Logs::LogGroup

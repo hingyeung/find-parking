@@ -118,7 +118,7 @@ const handler: Handler = async (event, context, callback) => {
     await loadSensorDataIntoDB(hydratedSensorDataList);
     callback(undefined, 'Parking sensor data loaded into database');
   } catch (err) {
-    console.log(`failed to load S3 ${event.parkingSensorDataFile} into DB`);
+    console.log(`failed to load ${event.parkingSensorDataFile} into DB`);
     callback(err);
   }
 };
