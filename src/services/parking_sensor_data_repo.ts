@@ -2,6 +2,7 @@ import { ParkingSensorData, ParkingSensorDataModel } from '../models/parking_sen
 import mongoose from 'mongoose';
 import { GeoJSONPoint, GeoJSONPointClass } from '../models/geo_json_point';
 import ConfigRepo from './config_repo';
+import { ParkingSensorStatus } from '../types';
 
 const DB_NAME = 'findparkingdb';
 
@@ -49,7 +50,7 @@ class ParkingSensorDataRepo {
     const query = ParkingSensorDataModel.find().where('location').near({
       center: centrePoint,
       maxDistance: radiusInMeter
-    }); // .where('status').equals(ParkingSensorStatus.UNOCCUPIED);
+    }).where('status').equals(ParkingSensorStatus.UNOCCUPIED);
     return query.exec();
   }
 }
