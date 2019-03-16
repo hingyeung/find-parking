@@ -7,7 +7,9 @@
     "node": ">=8.10 <8.11"
   },
   "scripts": {
-    "start_localstack": "./scripts/start_localstack.sh",
+    "start_localstack": "./scripts/start_localstack.sh && ./scripts/seed_data.sh",
+    "stop_localstack": "./scripts/stop_localstack.sh",
+    "show_localstack_log": "./scripts/show_localstack_log.sh",
     "seed_data": "./scripts/seed_data.sh",
     "watch_load_parking_sensor_data_from_s3": "./node_modules/webpack/bin/webpack.js --TARGET=load_sensor_data_into_db --watch",
     "watch_download_parking_sensor_data": "./node_modules/webpack/bin/webpack.js --TARGET=download_parking_sensor_data --watch",

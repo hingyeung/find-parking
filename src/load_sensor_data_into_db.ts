@@ -109,8 +109,8 @@ const handler: Handler = async (event, context, callback) => {
     // load the latest parking sensor data from S3
     const sensorDataList = await getSensorDataFromS3(parkingSensorS3Src.bucket, parkingSensorS3Src.key);
     // load the latest parking restriction ifrom S3
-    const parkingRestrictionS3Bucket = await getSSMParameter('/find-parking/parking-restriction/data/s3-bucket');
-    const parkingRestrictionS3Key = await getSSMParameter('/find-parking/parking-restriction/data/s3-key');
+    const parkingRestrictionS3Bucket = await getSSMParameter('/find-parking/data/parking-restriction/data/s3-bucket');
+    const parkingRestrictionS3Key = await getSSMParameter('/find-parking/data/parking-restriction/data/s3-key');
     const parkingRestrictionMap = await getParkingRestrictionFromS3(parkingRestrictionS3Bucket, parkingRestrictionS3Key);
 
     const hydratedSensorDataList = hydrateParkingSensorDataWithParkingRestriction(sensorDataList, parkingRestrictionMap);

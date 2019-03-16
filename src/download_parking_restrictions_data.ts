@@ -48,8 +48,8 @@ const handler: Handler = (event, context, callback) => {
         console.log(`Parking restriction data saved in ${savedUrl}`);
         // store the s3 url of the parking restriction file to SSM
         // TODO parameter path should contain environment name to have different parameter for different env.
-        await putSSMParameter('/find-parking/parking-restriction/data/s3-bucket', s3Params.Bucket);
-        await putSSMParameter('/find-parking/parking-restriction/data/s3-key', s3Params.Key);
+        await putSSMParameter('/find-parking/data/parking-restriction/data/s3-bucket', s3Params.Bucket);
+        await putSSMParameter('/find-parking/data/parking-restriction/data/s3-key', s3Params.Key);
         callback(undefined, {parkingRestrictionsDataFile: savedUrl});
       });
     })

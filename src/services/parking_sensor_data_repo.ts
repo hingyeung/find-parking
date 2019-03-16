@@ -3,12 +3,19 @@ import mongoose from 'mongoose';
 import { GeoJSONPoint, GeoJSONPointClass } from '../models/geo_json_point';
 import ConfigRepo from './config_repo';
 import { ParkingSensorStatus } from '../types';
+import { getSSMParameter } from '../helpers/ssm_helper';
 
 const DB_NAME = 'findparkingdb';
 
 class ParkingSensorDataRepo {
   constructor() {
-    const mongodb_uri = ConfigRepo.getMongoDBConfig().uri;
+    ParkingSensorDataRepo.connectToMongoDB();
+  }
+
+  static async connectToMongoDB() {
+    // const mongodb_uri = ConfigRepo.getMongoDBConfig().uri;
+    const mongodb_uri = await ParkingSensorDataRepo.getMongoDBUriFromSSM();
+    console.log('Connecting to MongoDB:', mongodb_uri);
     mongoose.connect([mongodb_uri, DB_NAME].join('/'), {useNewUrlParser: true});
 
     // Get Mongoose to use the global promise library
@@ -18,6 +25,14 @@ class ParkingSensorDataRepo {
     // Bind connection to error event (to get notification of connection errors)
     db.on('error', console.error.bind(console, 'MongoDB connection error:'));
     db.on('open', () => { console.log('MongoDB connected'); });
+  }
+
+  static async getMongoDBUriFromSSM() {
+    const hostname = await getSSMParameter('/find-parking/config/mongodb/host');
+    const port = await getSSMParameter('/find-parking/config/mongodb/port');
+    const username = await getSSMParameter('/find-parking/config/mongodb/username');
+    const password = await getSSMParameter('/find-parking/config/mongodb/password');
+    return `mongodb://${username}:${password}@${hostname}:${port}`;
   }
 
   async upsertAll(sensorDataList: ParkingSensorData[]): Promise<any> {

@@ -17,4 +17,5 @@ export SERVICES=s3,ssm
 docker-compose \
     --file deploy/localstack-docker-compose.yml \
     --project-name find-parking \
-    up
+    up \
+    -d
