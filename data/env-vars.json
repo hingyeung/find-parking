@@ -1,6 +1,6 @@
 {
   "LoadParkingSensorDataToDBFunction": {
-    "NODE_ENV": "sam_local",
+    "NODE_ENV": "sam_local"
   },
   "DownloadParkingSensorDataFunction": {
     "NODE_ENV": "sam_local",
@@ -13,6 +13,6 @@
     "TARGET_PREFIX": "parking-restrictions"
   },
   "ParkingSensorQueryHandlerFunction": {
-    "NODE_ENV": "sam_local",
+    "NODE_ENV": "sam_local"
   }
 }
