@@ -15,5 +15,3 @@ aws cloudformation deploy \
     --parameter-overrides \
         dataBucket=${ARTEFACT_S3_BUCKET} \
         downloadDestPrefix=${PARKING_DATA_DOWNLOAD_DESTINATION_S3_PREFIX}
-
-# aws --profile deployer  cloudformation deploy --template-file /Users/samli/dev/find-parking/tmp/find_parking_cfn.yaml --stack-name find-parking-dev-stack --capabilities CAPABILITY_IAM --parameter-overrides dataBucket=build-artefacts.samuelli.net downloadDestPrefix=find-parking/data

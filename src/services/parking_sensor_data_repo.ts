@@ -23,29 +23,25 @@ class ParkingSensorDataRepo {
     db.on('open', () => { console.log('MongoDB connected', Math.random()); });
   }
 
-  async upsertAll(sensorDataList: ParkingSensorData[]): Promise<any> {
-    try {
-      for (let idx = 0; idx < sensorDataList.length; idx++) {
-        await this.upsert(sensorDataList[idx]);
-        if (idx % 100 === 0) {
-          console.log(`Processed ${idx} records`, Math.random());
+  upsertAll(sensorDataList: ParkingSensorData[]): Promise<any> {
+    const bulkOps = sensorDataList.map((sensorData => {
+      return {
+        updateOne: {
+          filter: {bay_id: sensorData.bay_id},
+          update: sensorData,
+          upsert: true
         }
-      }
-      return Promise.resolve();
-    } catch (err) {
-      return Promise.reject(err);
-    }
-  }
+      };
+    }));
 
-  async upsert(sensorData: ParkingSensorData): Promise<any> {
-    try {
-      const parkingSensorData = sensorData;
-      const query = {bay_id: parkingSensorData.bay_id};
-      await ParkingSensorDataModel.findOneAndUpdate(query, parkingSensorData, {upsert: true}).exec();
-    } catch (err) {
-      console.log('upsert error', err);
-      return Promise.reject(err);
-    }
+    return new Promise((resolve, reject) => {
+      ParkingSensorDataModel.bulkWrite(bulkOps)
+        .then(res => {
+          console.log(`inserted: ${res.insertedCount}, modified: ${res.modifiedCount}, deleted: ${res.deletedCount}`);
+          resolve(res);
+        })
+        .catch(err => reject(err));
+    });
   }
 
   findUnoccupiedParkingWithinRadius(latitude: number, longitude: number, radiusInMeter: number): Promise<any> {

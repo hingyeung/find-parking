@@ -171,8 +171,8 @@ Resources:
       CodeUri: ../dist
       Handler: load_sensor_data_into_db_bundle.handler
       Runtime: nodejs8.10
-      MemorySize: 512
-      Timeout: 300
+      MemorySize: 128
+      Timeout: 60
       Environment:
         Variables:
           NODE_ENV: 'production'

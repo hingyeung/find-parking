@@ -61,10 +61,9 @@ const getParkingRestrictionFromS3 = (srcBucket: string, srcKey: string): Promise
   });
 };
 
-const loadSensorDataIntoDB = async (sensorDataList: ParkingSensorData[]) => {
+const loadSensorDataIntoDB = (sensorDataList: ParkingSensorData[]) => {
   const psdr = new ParkingSensorDataRepo();
-  await psdr.upsertAll(sensorDataList).then(
-    () => {
+  return psdr.upsertAll(sensorDataList).then((res) => {
       console.log('data upserted');
       return Promise.resolve();
     }
