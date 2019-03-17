@@ -23,7 +23,7 @@
     "run_parking_sensor_query_api": "./scripts/parking_sensor_query_api.sh",
     "debug_download_parking_sensor_data": "./scripts/download_parking_sensor_data.sh data/events/manual_trigger.json -d 5858",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "./node_modules/webpack/bin/webpack.js --TARGET=load_sensor_data_into_db && ./node_modules/webpack/bin/webpack.js --TARGET=download_parking_sensor_data && ./node_modules/webpack/bin/webpack.js --TARGET=download_parking_restrictions_data && ./node_modules/webpack/bin/webpack.js --TARGET=parking_sensor_query_handler"
+    "transpile": "./node_modules/webpack/bin/webpack.js --TARGET=load_sensor_data_into_db && ./node_modules/webpack/bin/webpack.js --TARGET=download_parking_sensor_data && ./node_modules/webpack/bin/webpack.js --TARGET=download_parking_restrictions_data && ./node_modules/webpack/bin/webpack.js --TARGET=parking_sensor_query_handler"
   },
   "author": "Samuel Li <samli@samuelli.net>",
   "license": "ISC",

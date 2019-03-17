@@ -1,11 +1,8 @@
 import { ParkingSensorData, ParkingSensorDataModel } from '../models/parking_sensor_data';
 import mongoose from 'mongoose';
 import { GeoJSONPoint, GeoJSONPointClass } from '../models/geo_json_point';
-import ConfigRepo from './config_repo';
 import { ParkingSensorStatus } from '../types';
 import { getSSMParameter } from '../helpers/ssm_helper';
-
-const DB_NAME = 'findparkingdb';
 
 class ParkingSensorDataRepo {
   constructor() {
@@ -14,9 +11,8 @@ class ParkingSensorDataRepo {
 
   static async connectToMongoDB() {
     // const mongodb_uri = ConfigRepo.getMongoDBConfig().uri;
-    const mongodb_uri = await ParkingSensorDataRepo.getMongoDBUriFromSSM();
-    console.log('Connecting to MongoDB:', mongodb_uri);
-    mongoose.connect([mongodb_uri, DB_NAME].join('/'), {useNewUrlParser: true});
+    const mongodb_uri = await getSSMParameter('/find-parking/config/mongodb/uri');
+    mongoose.connect(mongodb_uri, {useNewUrlParser: true});
 
     // Get Mongoose to use the global promise library
     mongoose.Promise = global.Promise;
@@ -24,15 +20,7 @@ class ParkingSensorDataRepo {
     const db = mongoose.connection;
     // Bind connection to error event (to get notification of connection errors)
     db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-    db.on('open', () => { console.log('MongoDB connected'); });
-  }
-
-  static async getMongoDBUriFromSSM() {
-    const hostname = await getSSMParameter('/find-parking/config/mongodb/host');
-    const port = await getSSMParameter('/find-parking/config/mongodb/port');
-    const username = await getSSMParameter('/find-parking/config/mongodb/username');
-    const password = await getSSMParameter('/find-parking/config/mongodb/password');
-    return `mongodb://${username}:${password}@${hostname}:${port}`;
+    db.on('open', () => { console.log('MongoDB connected', Math.random()); });
   }
 
   async upsertAll(sensorDataList: ParkingSensorData[]): Promise<any> {
@@ -40,7 +28,7 @@ class ParkingSensorDataRepo {
       for (let idx = 0; idx < sensorDataList.length; idx++) {
         await this.upsert(sensorDataList[idx]);
         if (idx % 100 === 0) {
-          console.log(`Processed ${idx} records`);
+          console.log(`Processed ${idx} records`, Math.random());
         }
       }
       return Promise.resolve();
