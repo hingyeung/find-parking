@@ -3,17 +3,20 @@
     "s3Endpoint": "http://localhost:4572",
     "region": "ap-southeast-2",
     "ssmEndpoint": "http://localstack:4583",
-    "CORSResponseValue": "*"
+    "CORSResponseValue": "*",
+    "parkingDataExpiresAfterSeconds": 36000
   },
   "sam_local": {
     "s3Endpoint": "http://localstack:4572",
     "region": "ap-southeast-2",
     "ssmEndpoint": "http://localstack:4583",
-    "CORSResponseValue": "*"
+    "CORSResponseValue": "*",
+    "parkingDataExpiresAfterSeconds": 36000
   },
   "production": {
     "region": "ap-southeast-2",
     "mongodb_uri": "read from SSM",
-    "CORSResponseValue": "https://findparking.demo.samuelli.net"
+    "CORSResponseValue": "https://findparking.demo.samuelli.net",
+    "parkingDataExpiresAfterSeconds": 3600
   }
 }

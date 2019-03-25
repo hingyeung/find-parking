@@ -28,7 +28,8 @@ const convertParkingSensorSrcData = (srcDataList: ParkingSensorSrcData[]): Parki
       location: {
         type: 'Point',
         coordinates: [srcData.lon, srcData.lat] as [number, number]
-      }
+      },
+      updatedAt: new Date()
     };
   });
 };
@@ -93,7 +94,8 @@ const hydrateParkingSensorDataWithParkingRestriction =
       st_marker_id: sensorData.st_marker_id,
       location: sensorData.location,
       status: sensorData.status,
-      restrictions: parkingRestrictionMap[sensorData.bay_id] ? parkingRestrictionMap[sensorData.bay_id].restriction : undefined
+      restrictions: parkingRestrictionMap[sensorData.bay_id] ? parkingRestrictionMap[sensorData.bay_id].restriction : undefined,
+      updatedAt: new Date()
     };
   });
 };

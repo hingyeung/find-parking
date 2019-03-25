@@ -20,6 +20,7 @@ export interface ParkingSensorData {
   status: ParkingSensorStatus;
   // Parking restrictions
   restrictions?: Restriction[];
+  updatedAt: Date;
 }
 
 export interface ParkingSensorDataModel extends Document, ParkingSensorData {}
@@ -33,7 +34,8 @@ const ParkingSensorDataSchema: Schema = new Schema({
     type: String,
     enum: [ParkingSensorStatus.PRESENT, ParkingSensorStatus.UNOCCUPIED]
   },
-  restrictions: [RestrictionSchema]
+  restrictions: [RestrictionSchema],
+  updatedAt: { type: Date, default: new Date(), expires: 3600 }
 });
 ParkingSensorDataSchema.index({location: '2dsphere'});
 

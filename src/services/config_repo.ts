@@ -1,4 +1,5 @@
 const APP_CONFIG = require('../configs/app_configs.json');
+
 class ConfigRepo {
   static configForThisEnv = ConfigRepo._getConfigForThisEnv();
 
@@ -33,6 +34,10 @@ class ConfigRepo {
 
   static getCORSResponseValue() {
     return ConfigRepo.configForThisEnv.CORSResponseValue;
+  }
+
+  static getParkingExpiresAfterSeconds() {
+    return ConfigRepo.configForThisEnv.parkingDataExpiresAfterSeconds;
   }
 }
 

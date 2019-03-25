@@ -25,6 +25,7 @@ class ParkingSensorDataRepo {
 
   upsertAll(sensorDataList: ParkingSensorData[]): Promise<any> {
     const bulkOps = sensorDataList.map((sensorData => {
+      sensorData.updatedAt = new Date();
       return {
         updateOne: {
           filter: {bay_id: sensorData.bay_id},
