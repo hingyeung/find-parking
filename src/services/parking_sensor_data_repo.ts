@@ -50,7 +50,7 @@ class ParkingSensorDataRepo {
     const query = ParkingSensorDataModel.find().where('location').near({
       center: centrePoint,
       maxDistance: radiusInMeter
-    }).where('status').equals(ParkingSensorStatus.UNOCCUPIED);
+    }).where('status').equals(ParkingSensorStatus.UNOCCUPIED).select('-_id');
     return query.exec();
   }
 }
