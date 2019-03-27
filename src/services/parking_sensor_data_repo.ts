@@ -12,7 +12,7 @@ class ParkingSensorDataRepo {
   static async connectToMongoDB() {
     // const mongodb_uri = ConfigRepo.getMongoDBConfig().uri;
     const mongodb_uri = await getSSMParameter('/find-parking/config/mongodb/uri');
-    mongoose.connect(mongodb_uri, {useNewUrlParser: true});
+    mongoose.connect(mongodb_uri, {useNewUrlParser: true, useCreateIndex: true});
 
     // Get Mongoose to use the global promise library
     mongoose.Promise = global.Promise;

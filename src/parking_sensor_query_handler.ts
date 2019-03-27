@@ -5,15 +5,16 @@ import { ParkingSensorData } from './models/parking_sensor_data';
 import ConfigRepo from './services/config_repo';
 
 const buildAPIGWProxyResult = (statusCode: number, body: string): APIGatewayProxyResult => {
-  let respHeaders = {'Content-Type': 'application/json'};
+  const respHeaders: {[k: string]: string} = {'Content-Type': 'application/json'};
   const corsResponseValue = ConfigRepo.getCORSResponseValue();
   if (corsResponseValue) {
-    respHeaders = Object.assign(respHeaders, {'Access-Control-Allow-Origin': corsResponseValue});
+    respHeaders['Access-Control-Allow-Origin'] = corsResponseValue;
   }
   return {
     statusCode: Number.isInteger(statusCode) ? statusCode : 500,
     headers: respHeaders,
-    body: body
+    body: body,
+    isBase64Encoded: false
   };
 };
 

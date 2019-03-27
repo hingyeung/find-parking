@@ -152,6 +152,16 @@ Resources:
           NODE_ENV: 'production'
       Policies:
         - AWSLambdaBasicExecutionRole
+        - Statement:
+          - Sid: SSMGetParameter
+            Effect: Allow
+            Action:
+              - ssm:GetParameter
+              - ssm:GetParameters
+            Resource:
+              - "arn:aws:ssm:*:*:parameter/find-parking/data/*"
+              - "arn:aws:ssm:*:*:parameter/find-parking/config/*"
+
       Events:
         ParkingSensorQueryAPI:
           Type: Api
