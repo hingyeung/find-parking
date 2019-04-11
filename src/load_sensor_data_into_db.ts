@@ -41,7 +41,7 @@ const getSensorDataFromS3 = (srcBucket: string, srcKey: string): Promise<Parking
       if (err) {
         reject(err);
       } else {
-        console.log(`Loaded parking sensor data: ${data.ContentType}, ${data.ContentLength} bytes`);
+        console.log(`Loaded parking sensor data from [${srcBucket}, ${srcKey}]: ${data.ContentType}, ${data.ContentLength} bytes`);
         resolve(convertParkingSensorSrcData(JSON.parse(data.Body.toString())));
       }
     });
@@ -55,7 +55,7 @@ const getParkingRestrictionFromS3 = (srcBucket: string, srcKey: string): Promise
       if (err) {
         reject(err);
       } else {
-        console.log(`Loaded parking restriction data: ${data.ContentType}, ${data.ContentLength} bytes`);
+        console.log(`Loaded parking restriction data from [${srcBucket}, ${srcKey}]: ${data.ContentType}, ${data.ContentLength} bytes`);
         resolve(parseParkingRestrictionSrc(JSON.parse(data.Body.toString())));
       }
     });

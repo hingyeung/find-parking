@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ParkingRestrictionSrcData } from '../types';
 
-const PARKING_RESTRICTIONS_DATA_URL = 'https://data.melbourne.vic.gov.au/resource/ntht-5rk7.json';
+const PARKING_RESTRICTIONS_DATA_URL = 'https://data.melbourne.vic.gov.au/resource/ntht-5rk7.json?$limit=5000';
 class ParkingRestrictionsDataService {
   static async downloadParkingRestrictionsData(): Promise<ParkingRestrictionSrcData[]> {
     try {
