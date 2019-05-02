@@ -33,6 +33,7 @@ Resources:
           - Effect: Allow
             Action:
             - "lambda:InvokeFunction"
+            # Can we limit it to lambda functions defined in this template?
             Resource: "*"
 
   IngestParkingSensorDataStateMachine:
@@ -83,6 +84,39 @@ Resources:
             LoadParkingSensorDataToDBFunctionArn: !GetAtt [ LoadParkingSensorDataToDBFunction, Arn ]
           }
       RoleArn: !GetAtt [ StatesExecutionRole, Arn ]
+
+  TriggerIngestParkingSensorDataStateMachineEventRuleRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Principal:
+            Service:
+            - events.amazonaws.com
+          Action: "sts:AssumeRole"
+      Path: "/service-role/"
+      Policies:
+      - PolicyName: ExecuteStepFunctionPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+            - "states:StartExecution"
+            Resource: !Ref IngestParkingSensorDataStateMachine
+
+  TriggerIngestParkingSensorDataStateMachineEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "Triggering IngestParkingSensorDataStateMachine every 2 minutes"
+      ScheduleExpression: "rate(2 minutes)"
+      State: "ENABLED"
+      Targets:
+        - Arn: !Ref IngestParkingSensorDataStateMachine
+          Id: "TargetStateMachine001"
+          RoleArn: !GetAtt [ TriggerIngestParkingSensorDataStateMachineEventRuleRole, Arn ]
 
   DownloadParkingSensorDataFunction:
     Type: AWS::Serverless::Function

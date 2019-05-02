@@ -26,6 +26,7 @@ const handler: APIGatewayProxyHandler = (event: APIGatewayEvent, context: Contex
     lat = parseFloat(event.queryStringParameters['lat']) || undefined,
     lng = parseFloat(event.queryStringParameters['lng']) || undefined,
     radiusInMeter = parseFloat(event.queryStringParameters['radiusInMeter']) || undefined;
+  // TODO make sure radiusInMeter is less than or equal to 1000
   if (!lat || !lng || !radiusInMeter) {
     callback(undefined, buildAPIGWProxyResult(400, 'Bad Request'));
   }
