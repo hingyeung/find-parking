@@ -107,16 +107,27 @@ Resources:
             - "states:StartExecution"
             Resource: !Ref IngestParkingSensorDataStateMachine
 
-  TriggerIngestParkingSensorDataStateMachineEventRule:
+  BusinessHourTriggerIngestParkingSensorDataStateMachineEventRule:
     Type: AWS::Events::Rule
     Properties:
-      Description: "Triggering IngestParkingSensorDataStateMachine every 2 minutes"
-      ScheduleExpression: "rate(2 minutes)"
+      Description: "Triggering IngestParkingSensorDataStateMachine every 2 minutes between 06:00 and 22:59"
+      ScheduleExpression: "cron(*/2 6-22 * * ? *)"
       State: "ENABLED"
       Targets:
         - Arn: !Ref IngestParkingSensorDataStateMachine
           Id: "TargetStateMachine001"
           RoleArn: !GetAtt [ TriggerIngestParkingSensorDataStateMachineEventRuleRole, Arn ]
+
+  AfterHourTriggerIngestParkingSensorDataStateMachineEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "Triggering IngestParkingSensorDataStateMachine every 15 minutes between 23:00 and 05:59"
+      ScheduleExpression: "cron(*/15 23-5 * * ? *)"
+      State: "ENABLED"
+      Targets:
+      - Arn: !Ref IngestParkingSensorDataStateMachine
+        Id: "TargetStateMachine001"
+        RoleArn: !GetAtt [ TriggerIngestParkingSensorDataStateMachineEventRuleRole, Arn ]
 
   DownloadParkingSensorDataFunction:
     Type: AWS::Serverless::Function
