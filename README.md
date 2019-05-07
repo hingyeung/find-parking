@@ -1,6 +1,6 @@
 ## Serverless Backend of Melbourne City On-street Parking Finder
 
- This is a serverless backend that serves the frontend of Melbourne City On-street Parking Finder. It consists of two components:
+ This is an API implemented with serverless technologies and it serves the frontend of [Melbourne City On-street Parking Finder](https://github.com/hingyeung/find-parking-ui). It consists of two components:
  1. An AWS Lambda function that handles queries from UI.
  1. A workflow for ingesting On-street parking sensor data from City of Melbourne Open Data Platform, orchestrated with AWS Step Functions and Lambda functions.
 
