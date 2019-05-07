@@ -110,8 +110,8 @@ Resources:
   BusinessHourTriggerIngestParkingSensorDataStateMachineEventRule:
     Type: AWS::Events::Rule
     Properties:
-      Description: "Triggering IngestParkingSensorDataStateMachine every 2 minutes between 06:00 and 22:59"
-      ScheduleExpression: "cron(*/2 6-22 * * ? *)"
+      Description: "Triggering IngestParkingSensorDataStateMachine every 2 minutes between 07:00 and 22:59"
+      ScheduleExpression: "cron(*/2 20-12 * * ? *)"
       State: "ENABLED"
       Targets:
         - Arn: !Ref IngestParkingSensorDataStateMachine
@@ -122,7 +122,7 @@ Resources:
     Type: AWS::Events::Rule
     Properties:
       Description: "Triggering IngestParkingSensorDataStateMachine every 15 minutes between 23:00 and 05:59"
-      ScheduleExpression: "cron(*/15 23-5 * * ? *)"
+      ScheduleExpression: "cron(*/15 13-19 * * ? *)"
       State: "ENABLED"
       Targets:
       - Arn: !Ref IngestParkingSensorDataStateMachine
@@ -213,6 +213,20 @@ Resources:
           Properties:
             Path: '/findAvailableParkings'
             Method: GET
+
+  FindParkingAPIUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      UsagePlanName: find-parking-usage-plan
+      ApiStages:
+        - ApiId: !Ref ServerlessRestApi
+          Stage: Prod
+      Quota:
+        Limit: 1000
+        Period: WEEK
+      Throttle:
+        BurstLimit: 10
+        RateLimit: 5
 
   ParkingSensorQueryHandlerFunctionLogGroup:
     Type: AWS::Logs::LogGroup
