@@ -166,6 +166,12 @@ Resources:
           NODE_ENV: 'production'
           TARGET_BUCKET: !Ref dataBucket
           TARGET_PREFIX: !Sub "${AWS::StackName}/${downloadDestPrefix}"
+      Events:
+        # Triggering DownloadParkingRestrictionsDataFunction everyday at 06:00
+        TriggerEvent:
+          Type: Schedule
+          Properties:
+            Schedule: "cron(0 19 * * ? *)"
       Policies:
       - S3CrudPolicy:
           BucketName: !Ref dataBucket
